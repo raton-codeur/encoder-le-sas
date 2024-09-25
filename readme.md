@@ -1,5 +1,5 @@
-
-le sas est un fichier texte qui contient une succession de "séparateurs" et de "sections"
+# infos générales
+le `sas` est un fichier texte qui contient une succession de `séparateurs` et de `sections`
 
 il y a 3 paquets de flashcards sur Anki :
 ● "1 - base"
@@ -40,6 +40,7 @@ une section non vide doit avoir un premier champ non vide.
 une section c2 doit avoir au moins ses 2 premiers champs non vides.
 il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés dans le sas (par un changement de champ (avec "@")).
 
+# ce qu'on veut faire
 on veut vérifier que la structure du sas est correcte et produire différents fichiers correspondant aux différents types des sections du sas mis en forme. une telle section, mise en forme, est "encodée".
 dans un type de fichier produit donné, excepté pour (le type de section) "a", il doit y avoir une section encodée par ligne. dans une section encodée, les retours à la ligne doivent être indiqués par (la chaîne de caractères) "<br />" et un changement de champ doit être indiqué par une tabulation. en outre, il ne doit pas y avoir de tabulation dans le sas.
 dans une section encodée, le nombre de champs (donc de tabulations) doit être précisément respecté, selon la définition du type de la section, même si un champ est vide ou n'est pas spécifié dans le sas.
@@ -80,5 +81,5 @@ enfin, on veut déplacer les images du dossier des téléchargements vers le dos
 
 
 
-divers
-un caractère blanc est un espace,
+# divers
+un caractère blanc est un espace, un retour à la ligne ou une tabulation
