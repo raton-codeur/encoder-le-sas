@@ -114,13 +114,13 @@ les changements de champ doivent être encodés par `\t`.
 
 ## pour les sections `a`
 
-les changements de sections doivent être encodés par `\n-\n`.
+les changements de section doivent être encodés par `\n-\n`.
 
 les changements de champ doivent être encodés par `\n`.
 
 les champs vides doivent être encodés par `<p></p>`.
 
-lorsque deux champs sont spécifiés, ce sont les champs `Anglais` et `Français`.
+lorsque seulement deux champs sont spécifiés, ce sont les champs `Anglais` et `Français`.
 
 # divers
 
@@ -130,4 +130,4 @@ lorsque deux champs sont spécifiés, ce sont les champs `Anglais` et `Français
 
 un *caractère blanc* est un espace, un retour à la ligne ou une tabulation.
 
-un texte est *trimé* lorsqu'on lui a retiré les caractères blancs de ses extrémités. cela s'appelle *trimer* le texte / on *trim* le texte.
+un texte est *trimé* lorsqu'on lui a retiré les caractères blancs de ses extrémités. cela s'appelle *trimer* le texte et on dit qu'on *trim* le texte.
