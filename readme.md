@@ -130,4 +130,4 @@ lorsque seulement deux champs sont spécifiés, ce sont les champs `Anglais` et 
 
 un *caractère blanc* est un espace, un retour à la ligne ou une tabulation.
 
-un texte est *trimé* lorsqu'on lui a retiré les caractères blancs de ses extrémités. cela s'appelle *trimer* le texte et on dit qu'on *trim* le texte.
+*trimer* un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte. il est alors *trimé*.
