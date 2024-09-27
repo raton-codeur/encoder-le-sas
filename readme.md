@@ -36,7 +36,7 @@ une section est identifiée non seulement par le séparateur qui la précède ma
 - `\n--` identifie `c2` et `t2`
 - `\n---` identifie `c3` et `t3`
 
-cependant, une section de type `t` comporte au moins un trou. c'est ce qui la différencie de son homologue de type `c`.
+cependant, une section de type `t` comporte au moins un **trou**. c'est ce qui la différencie de son homologue de type `c`.
 
 un **trou** est une chaîne de caractères de la forme `{{c` + [ un nombre ] + `::` + [ un texte ] (+ `::` + [ un texte ]) + `}}`.
 
@@ -75,17 +75,17 @@ dans un deuxième temps, on veut réinitialiser le sas et supprimer les fichiers
 
 # règles pour le sas
 
-si on veut utiliser la chaine de caractères `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
+il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant, une section non vide doit avoir un premier champ non vide et une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.  
 
-si on veut encoder le caractère `@` sans indiquer de changement de champ, on doit utiliser `\@`.
-
-il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant, une section non vide doit avoir un premier champ non vide et une section `c2` doit avoir au moins ses 2 premiers champs non vides.  
-
-il ne doit pas y avoir plus de changements de champ que de changements de champ possibles dans une section.
+il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
 
 les textes de balise ne doivent pas être vides.
 
 il ne doit pas y avoir de tabulation.
+
+si on veut utiliser la chaine de caractères `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
+
+si on veut encoder le caractère `@` sans indiquer de changement de champ, on doit utiliser `\@`.
 
 # règles d'encodage
 
