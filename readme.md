@@ -94,7 +94,7 @@ si on veut utiliser le caractère `@` sans indiquer de changement de champ, on d
 les retours à la ligne doivent être encodés par `<br />`.
 
 les champs, les textes de balise et les textes de trou doivent être trimés.  
-les lignes doivent être trimées des espaces. par exemple, `\n a` doit devenir `\na`. 
+les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit devenir `\na`. 
 
 le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple) avec un nombre de changements de champ conséquent.
 
@@ -130,4 +130,4 @@ lorsque seulement deux champs sont spécifiés, ce sont les champs `Anglais` et 
 
 un *caractère blanc* est un espace, un retour à la ligne ou une tabulation.
 
-*trimer* un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte. il est alors *trimé*.
+*trimer* un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
