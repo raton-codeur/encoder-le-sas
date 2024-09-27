@@ -81,11 +81,11 @@ il ne doit pas y avoir plus de changements de champ que ce qui est possible dans
 
 les textes de balise ne doivent pas être vides.
 
-il ne doit pas y avoir de tabulation.
+il ne doit pas y avoir de tabulation dans le fichier.
 
 si on veut utiliser la chaine de caractères `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
 
-si on veut encoder le caractère `@` sans indiquer de changement de champ, on doit utiliser `\@`.
+si on veut utiliser le caractère `@` sans indiquer de changement de champ, on doit utiliser `\@`.
 
 # règles d'encodage
 
