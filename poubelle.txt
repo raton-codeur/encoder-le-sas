@@ -1,0 +1,48 @@
+# i_last_section : indice du début d'une section dans le sas
+# renvoie l'indice de la prochaine section
+# 0 si c'est fini
+# def get_next_i(sas, i_last_section) :
+    # if (sas[i_last_section:].startswith("---")) :
+    #     i = i_last_section + 3
+    # elif (sas[i_last_section:].startswith("--")) or (sas[i_last_section:].startswith("-a")) :
+    #     i = i_last_section + 2
+    # else :
+    #     i = i_last_section + 1
+    # while not starts_with_sep( sas[i:]) :
+    #     i += 1
+    # return i
+
+# i = get_next_i(sas, 0)
+# i = get_next_i(sas, i)
+# print(sas[i:])
+
+
+
+
+
+
+# distribue le sas dans les sections selon le separateur
+def distribute() :
+    global sas, sections 
+    for sep, section in sas :
+        section = section.strip()
+        if section :
+            if sep == separators["1"] :
+                sections["c1"].append(section)
+            elif sep == separators["2"] :
+                sections["c2"].append(section)
+            elif sep == separators["3"] :
+                sections["c3"].append(section)
+            elif sep == separators["a"] :
+                sections["a"].append(section)
+            else :
+                exit("erreur : séparateur inconnu")
+# distribue()
+
+def print_sections() :
+    global sections
+    for nom, contenu in sections.items() :
+        if contenu :
+            print(nom, contenu)
+
+

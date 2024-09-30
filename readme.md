@@ -58,7 +58,8 @@ un **texte de balise** fait référence au contenu de l'attribut *src* de la bal
 
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas. si tout est correct, on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
+on veut vérifier qu'il n'y a pas d'erreur dans le sas.  
+si tout est correct, on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
 - le fichier `1 - 1` pour les sections `c1`
@@ -75,13 +76,13 @@ dans un deuxième temps, on veut réinitialiser le sas et supprimer les fichiers
 
 # règles pour le sas
 
+le texte de l'attribut *src* d'une balise *img*, une fois trimé, ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
+
+aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
+
 il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant, une section non vide doit avoir un premier champ non vide et une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.  
 
 il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
-
-les textes de balise ne doivent pas être vides.
-
-il ne doit pas y avoir de tabulation dans le fichier.
 
 si on veut utiliser la chaine de caractères `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
 
@@ -91,20 +92,18 @@ si on veut utiliser le caractère `@` sans indiquer de changement de champ, on d
 
 ## pour toutes les sections
 
+les tabulations doivent être encodées par 4 espaces.
+
 les retours à la ligne doivent être encodés par `<br />`.
 
 les champs, les textes de balise et les textes de trou doivent être trimés.  
 les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit devenir `\na`. 
 
-le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple) avec un nombre de changements de champ conséquent.
+le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple). il doit donc toujours y avoir le bon nombre de changements de champ.
 
-si un champ commence par `"`, alors ce caractère doit être encodé par `&quot;`.
+si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
 tous les `<` doivent être encodés par `&lt;` et tous les `>` doivent être encodés par `&gt;` (sauf pour les balises où ils sont encodés tels quels).
-
-le texte de l'attribut *src* d'une balise *img*, une fois trimé, ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
-
-aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
 ## pour toutes les sections sauf `a`
 
