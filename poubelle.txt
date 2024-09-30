@@ -23,7 +23,7 @@
 
 # distribue le sas dans les sections selon le separateur
 def distribute() :
-    global sas, sections 
+    global sas, sections
     for sep, section in sas :
         section = section.strip()
         if section :
@@ -45,4 +45,73 @@ def print_sections() :
         if contenu :
             print(nom, contenu)
 
+
+
+
+
+
+# split le sas en liste de couples (séparateur, section)
+def get_first_separator(sas) :
+    for sep in ('---', '--', '-a', '-') :
+        if sas.startswith(sep) :
+            return sep
+    exit("le sas ne commence pas par un séparateur")
+
+def first_split() :
+    global sas
+    sep = get_first_separator(sas)
+    sas = ["\n" + sep] + re.split(r'(\n---|\n--|\n-a|\n-)', sas[len(sep):]) # ["\n-", "a", "\n-", "b", ...]
+    sas = [sas[i:(i + 2)] for i in range(0, len(sas), 2)] # [["\n-", "a"], ["\n-", "b"], ...]
+first_split()
+
+# diviser le sas en sections
+def second_split() :
+    global sas
+    result = {"\n-": [], "\n--" : [], "\n---" : [], "\n-a" : []}
+    for sep, section in sas :
+        result[sep].append(section)
+    sas = result
+second_split()
+
+def print_sas() :
+    global sas
+    for sep, sections in sas.items() :
+        print(f": {sep.strip()} :")
+        print(sections)
+# print_sas()
+
+
+
+# vérifier le texte de l'attribut *src* d'une balise *img*,
+def check_src() :
+    for sections in sas.values() :
+        for section in sections :
+            contents = re.findall(formats["img"], section)
+            for content in contents :
+                if re.search(r'[^\w\s\-\(\)\.]', content) :
+                    exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans cet attribut de balise img :\n{content}")
+check_src()
+
+# trimer les balises
+def trim() :
+    global sas
+    for sep, sections in sas.items() :
+        for section in sections :
+        for type_format in formats :
+            contents = re.findall(regex, section)
+            for content in contents :
+                if len(content) == 2 and content[1] :
+                    sas[i][1] = sas[i][1].replace(content[1], content[1].strip())
+                sas[i][1] = sas[i][1].replace(content[0], content[0].strip())
+
+
+# trim()
+# print(sas)
+
+
+# sas = ["ab", "c", "d"]
+# for i, valeur in enumerate(sas) :
+#     if valeur == "c" :
+#         sas[i] = "e"
+# print(sas)
 
