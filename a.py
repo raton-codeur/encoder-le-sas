@@ -6,10 +6,14 @@ import os
 
 sas_path = "sas.txt"
 # sas_path = "/Users/quentinhauuy/Documents/à rentrer/sas.txt"
-image_source_dir = "/Users/quentinhauuy/Downloads"
-image_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
-trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
-output_dir = "/Users/quentinhauuy/Downloads"
+image_source_dir = "."
+# image_source_dir = "/Users/quentinhauuy/Downloads"
+image_dest_dir = "./d"
+# image_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
+trash_dir = "trash"
+# trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
+output_dir = "."
+# output_dir = "/Users/quentinhauuy/Downloads"
 
 f = open(sas_path, "r")
 sas = f.read()
@@ -231,7 +235,16 @@ first_quote()
 
 print_sas()
 
-file_name = {"c1" : "1 - 1", "c2" : "2 - 2", "c3" : "1 - 3", "t1" : "3 - 1", "t2" : "4 - 2", "t3" : "3 - 3", "a" : "anglais"}
+file_name = {
+    "c1" : "1 - 1",
+    "c2" : "2 - 2",
+    "c3" : "1 - 3",
+    "t1" : "3 - 1",
+    "t2" : "4 - 2",
+    "t3" : "3 - 3",
+    "a" : "anglais"
+}
+
 def print_sizes() :
     for type, sections in sas.items() :
         print(f"{file_name[type]} : {len(sections)}")
@@ -239,38 +252,40 @@ print_sizes()
 
 # création des fichiers.
 
-def write_sections(flux, section_name, nb_fields, end_field, end_section) :
-    for section in sas[section_name] :
-        for i in range(nb_fields - 1) :
-            flux.write(section[i] + end_field)
-        flux.write(section[nb_fields - 1] + end_section)
+def write_sections(section_name, nb_fields, end_field, end_section) :
+    if sas[section_name] :
+        with open(f"{file_name[section_name]}.txt", "w") as f :
+            for section in sas[section_name] :
+                for i in range(nb_fields - 1) :
+                    f.write(section[i] + end_field)
+                f.write(section[nb_fields - 1] + end_section)
 
-# si il y a des sections de type c1
-if sas["c1"] :
-    with open("1 - 1.txt", "w") as f :
-        write_sections(f, "c1", 2, "\t", "\n")
+write_sections("c1", 2, "\t", "\n")
+write_sections("c2", 3, "\t", "\n")
+write_sections("c3", 2, "\t", "\n")
+write_sections("t1", 2, "\t", "\n")
+write_sections("t2", 3, "\t", "\n")
+write_sections("t3", 2, "\t", "\n")
+write_sections("a", 4, "\n", "\n-\n")
 
-if sas["c2"] :
-    with open("2 - 2.txt", "w") as f :
-        write_sections(f, "c2", 3, "\t", "\n")
+# copie des images
 
-if sas["c3"] :
-    with open("1 - 3.txt", "w") as f :
-        write_sections(f, "c3", 2, "\t", "\n")
+fichiers = os.listdir(image_source_dir)
 
-if sas["t1"] :
-    with open("3 - 1.txt", "w") as f :
-        write_sections(f, "t1", 2, "\t", "\n")
+def is_in_sas(fichier) :
+    for type, sections in sas.items() :
+        for section in sections :
+            for field in section :
+                if fichier in field :
+                    return True
+    return False
 
-if sas["t2"] :
-    with open("4 - 2.txt", "w") as f :
-        write_sections(f, "t2", 3, "\t", "\n")
+for fichier in fichiers :
+    if is_in_sas(fichier) :
+        os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
 
-if sas["t3"] :
-    with open("3 - 3.txt", "w") as f :
-        write_sections(f, "t3", 2, "\t", "\n")
+input("appuyez sur entrée pour supprimer le sas et les fichiers créés.")
 
-if sas["a"] :
-    with open("anglais.txt", "w") as f :
-        write_sections(f, "a", 4, "\n", "\n-\n")
-
+for type, section in sas.items() :
+    if section :
+        os.remove(f"{file_name[type]}.txt")
