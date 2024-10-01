@@ -136,8 +136,6 @@ def print_sas() :
     for type, sections in sas.items() :
         print(f": {type} :")
         print(sections)
-print_sas()
-print()
 
 # debut de la verification des champs
 
@@ -165,14 +163,6 @@ def split_field() :
     sas["a"] = split_1_section_type(sas["a"], nb_fields, 1)
 split_field()
 
-def get_empty_a() :
-    global sas
-    for section in sas["a"] :
-        for i in range(len(section)) :
-            if section[i].strip() == '' :
-                section[i] = "<p></p>"
-get_empty_a()
-
 def trim_fields() :
     global sas
     for type, sections in sas.items() :
@@ -181,13 +171,25 @@ def trim_fields() :
                 section[i] = section[i].strip()
 trim_fields()
 
-
 def remove_empty() :
     """ parcourt les sections. si tous les champs d'une section sont vides, la section est supprimée """
     global sas
-    
-
-
+    for type, section in sas.items() :
+        sas[type] = [section for section in sas[type] if not all([field == '' for field in section])]
 remove_empty()
 
-print_sas()
+def get_empty_a() :
+    global sas
+    for section in sas["a"] :
+        for i in range(len(section)) :
+            if section[i].strip() == '' :
+                section[i] = "<p></p>"
+get_empty_a()
+
+def check_trou() :
+    global sas
+    for type in "t1", "t2", "t3" :
+        for section in sas[type] :
+            if re.search(formats["trou"], section[1]) :
+                exit(f"erreur dans la section :\n{section}\ntrou dans le deuxieme champ")
+check_trou()
