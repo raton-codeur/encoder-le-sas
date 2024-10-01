@@ -1,24 +1,17 @@
 #!/opt/local/bin/python3.10
 
 import re
-import shutil
 import os
+import shutil
 
-sas_path = "sas.txt"
-# sas_path = "/Users/quentinhauuy/Documents/à rentrer/sas.txt"
-image_source_dir = "."
-# image_source_dir = "/Users/quentinhauuy/Downloads"
-image_dest_dir = "./d"
-# image_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
-trash_dir = "trash"
-# trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
-output_dir = "."
-# output_dir = "/Users/quentinhauuy/Downloads"
+sas_path = "/Users/quentinhauuy/Documents/à rentrer/sas.txt"
+image_source_dir = "/Users/quentinhauuy/Downloads"
+image_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
+trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
+output_dir = "/Users/quentinhauuy/Downloads"
 
-f = open(sas_path, "r")
-sas = f.read()
-f.close()
-sas = sas.strip()
+with open(sas_path, "r") as f :
+    sas = f.read().strip()
 
 # vérifier que le sas commence par un séparateur
 def starts_with_separator(sas) :
@@ -138,8 +131,9 @@ distribute()
 def print_sas() :
     global sas
     for type, sections in sas.items() :
-        print(f": {type} :")
-        print(sections)
+        if sections :
+            print(f": {type} :")
+            print(sections)
 
 # debut de la verification des champs
 
@@ -252,9 +246,13 @@ print_sizes()
 
 # création des fichiers.
 
+# si le sas est vide
+if not any(sas.values()) :
+    exit("sas vide")
+
 def write_sections(section_name, nb_fields, end_field, end_section) :
     if sas[section_name] :
-        with open(f"{file_name[section_name]}.txt", "w") as f :
+        with open(os.path.join(output_dir, f"{file_name[section_name]}.txt"), "w") as f :
             for section in sas[section_name] :
                 for i in range(nb_fields - 1) :
                     f.write(section[i] + end_field)
@@ -284,7 +282,7 @@ for fichier in fichiers :
     if is_in_sas(fichier) :
         os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
 
-input("appuyez sur entrée pour supprimer le sas et les fichiers créés.")
+input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
 
 for type, section in sas.items() :
     if section :
@@ -296,3 +294,5 @@ for i in range(8, -1, -1) :
 shutil.copy(sas_path, f"{trash_dir}/0.txt")
 with open(sas_path, "w") as f :
     f.write("-\n")
+
+print(f"log : {trash_dir}/0.txt")
