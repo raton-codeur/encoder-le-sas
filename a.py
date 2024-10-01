@@ -141,33 +141,45 @@ print()
 
 # debut de la verification des champs
 
+# liste des sections
+# nombre de fields voulus
+def f(sections, nb_fields, a = False) :
+    for i in range(len(sections)) :
+        if (len(re.split(r"(?<!\\)@", sections[i])) > nb_fields) :
+            exit("trop de champs dans la section :\n" + sections[i])
+        sections[i] = re.split(r"(?<!\\)@", sections[i])
+        if a and len(sections[i]) == 2 :
+            sections[i].extend(['', ''])
+            sections[i][1], sections[i][2] = sections[i][2], sections[i][1]
+        if (len(sections[i]) < nb_fields) :
+            sections[i].extend([''] * (nb_fields - len(sections[i])))
+    return sections
+
 def split_field() :
     global sas
+    nb_fields = 2
     for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] :
-        for i in range(len(sections)) :
-            if (len(re.split(r"(?<!\\)@", sections[i])) > 2) :
-                exit("trop de champs dans la section :\n" + sections[i])
-            sections[i] = re.split(r"(?<!\\)@", sections[i])
-    for i in range(len(sas["c2"])) :
-        if (len(re.split(r"(?<!\\)@", sas["c2"][i])) > 3) :
-            exit("trop de champs dans la section :\n" + sas["c2"][i])
-        sas["c2"][i] = re.split(r"(?<!\\)@", sas["c2"][i])
-    for i in range(len(sas["a"])) :
-        if (len(re.split(r"(?<!\\)@", sas["a"][i])) > 4) :
-            exit("trop de champs dans la section :\n" + sas["a"][i])
-        sas["a"][i] = re.split(r"(?<!\\)@", sas["a"][i])
+        sections = f(sections, nb_fields)
+    nb_fields = 3
+    sas["c2"] = f(sas["c2"], nb_fields)
+    nb_fields = 4
+    sas["a"] = f(sas["a"], nb_fields, 1)
 split_field()
 
+def fix_a() :
+    global sas
+    for section in sas["a"] :
+        for i in range(len(section)) :
+            if section[i].strip() == '' :
+                section[i] = "<p></p>"
+fix_a()
 
-"""
-# Taille minimale souhaitée
-min_size = 5
-
-# Si la taille est inférieure à min_size, on ajoute des éléments vides
-if len(result) < min_size:
-    result.extend([''] * (min_size - len(result)))
-
-"""
+def trim_fields() :
+    global sas
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                section[i] = section[i].strip()
+trim_fields()
 
 print_sas()
-
