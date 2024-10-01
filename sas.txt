@@ -1,6 +1,6 @@
-
--test
-- autre
+-test@
+-autre
 -pomme
--fleur
---a@b@c
+--test@
+--autre
+--pomme
