@@ -1,7 +1,17 @@
 
--  test @ tr
---test@ e r
----test
--)test@r
--@
+-a
+-
+
+-
+t@
+-
+@tr
+-
+@
+-@-
+-
+--
+-)
+test
+-)
 -

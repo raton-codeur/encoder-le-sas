@@ -183,8 +183,9 @@ trim_fields()
 
 
 def remove_empty() :
-    """ parcourt les """
+    """ parcourt les sections. si tous les champs d'une section sont vides, la section est supprimée """
     global sas
+    
 
 
 remove_empty()
