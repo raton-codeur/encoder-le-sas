@@ -141,9 +141,7 @@ print()
 
 # debut de la verification des champs
 
-# liste des sections
-# nombre de fields voulus
-def f(sections, nb_fields, a = False) :
+def split_1_section_type(sections, nb_fields, a = False) :
     for i in range(len(sections)) :
         if (len(re.split(r"(?<!\\)@", sections[i])) > nb_fields) :
             exit("trop de champs dans la section :\n" + sections[i])
@@ -155,24 +153,25 @@ def f(sections, nb_fields, a = False) :
             sections[i].extend([''] * (nb_fields - len(sections[i])))
     return sections
 
+# split les sections en champs
 def split_field() :
     global sas
     nb_fields = 2
     for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] :
-        sections = f(sections, nb_fields)
+        sections = split_1_section_type(sections, nb_fields)
     nb_fields = 3
-    sas["c2"] = f(sas["c2"], nb_fields)
+    sas["c2"] = split_1_section_type(sas["c2"], nb_fields)
     nb_fields = 4
-    sas["a"] = f(sas["a"], nb_fields, 1)
+    sas["a"] = split_1_section_type(sas["a"], nb_fields, 1)
 split_field()
 
-def fix_a() :
+def get_empty_a() :
     global sas
     for section in sas["a"] :
         for i in range(len(section)) :
             if section[i].strip() == '' :
                 section[i] = "<p></p>"
-fix_a()
+get_empty_a()
 
 def trim_fields() :
     global sas
@@ -181,5 +180,13 @@ def trim_fields() :
             for i in range(len(section)) :
                 section[i] = section[i].strip()
 trim_fields()
+
+
+def remove_empty() :
+    """ parcourt les """
+    global sas
+
+
+remove_empty()
 
 print_sas()
