@@ -193,3 +193,6 @@ def check_trou() :
             if re.search(formats["trou"], section[1]) :
                 exit(f"erreur dans la section :\n{section}\ntrou dans le deuxieme champ")
 check_trou()
+
+
+print_sas()
