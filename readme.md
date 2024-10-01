@@ -21,7 +21,7 @@ il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** diffé
 - `t2` pour type 4 et paquet 2
 - `t3` pour type 3 et paquet 3
 
-il y a aussi les sections d'anglais (`a`) pour les flashcards Mosalingua, avec les champs `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.  
+il y a aussi les sections d'anglais (`a`) pour les flashcards Mosalingua, avec les champs `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
 un **séparateur** dans le sas peut être :
@@ -58,7 +58,7 @@ un **texte de balise** fait référence au contenu de l'attribut *src* de la bal
 
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas.  
+on veut vérifier qu'il n'y a pas d'erreur dans le sas.
 si tout est correct, on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
@@ -80,7 +80,7 @@ le texte de l'attribut *src* d'une balise *img*, une fois trimé, ne doit pas co
 
 aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
-il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant, une section non vide doit avoir un premier champ non vide et une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.  
+il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant, une section non vide doit avoir un premier champ non vide et une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.
 
 il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
 
@@ -96,14 +96,12 @@ les tabulations doivent être encodées par 4 espaces.
 
 les retours à la ligne doivent être encodés par `<br />`.
 
-les champs, les textes de balise et les textes de trou doivent être trimés.  
-les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit devenir `\na`. 
+les champs, les textes de balise et les textes de trou doivent être trimés.
+les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit devenir `\na`.
 
 le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple). il doit donc toujours y avoir le bon nombre de changements de champ.
 
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
-
-tous les `<` doivent être encodés par `&lt;` et tous les `>` doivent être encodés par `&gt;` (sauf pour les balises où ils sont encodés tels quels).
 
 ## pour toutes les sections sauf `a`
 

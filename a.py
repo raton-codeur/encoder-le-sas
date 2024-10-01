@@ -18,7 +18,7 @@ sas = sas.strip()
 
 # debut des verifications
 
-# vérifie que le sas commence par un séparateur
+# vérifier que le sas commence par un séparateur
 def starts_with_separator(sas) :
     for sep in ('---', '--', '-a', '-') :
         if sas.startswith(sep) :
@@ -34,24 +34,44 @@ formats = {
     "sup": r"<sup>([\s\S]*?)</sup>",
     "sub": r"<sub>([\s\S]*?)</sub>",
     "b": r"<b>([\s\S]*?)</b>",
-    "trou" : r"\{\{c\d+::([\s\S]*?)(?:::([\s\S]*?))?\}\}"
+    "trou" : r"\{\{c\d+::([\s\S]*?)(?:::([\s\S]*?))?\}\}",
+    "trou complet" : r"\{\{c(\d+)::([\s\S]*?)(::([\s\S]*?))?\}\}"
 }
 
-# on veut la liste des sections du sas
-sections = re.split(r'\n---|\n--|\n-a|\n-', sas)
-
 # verifier les caracteres dans lattribut src de balise img
-for section in sections :
-    contents = re.findall(formats["img"], section)
-    for content in contents :
-        if re.search(r'[^\w\s\-\(\)\.]', content) :
-            exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans cet attribut de balise img :\n{content}")
+def check_img_src(sas) :
+    sections = re.split(r'\n---|\n--|\n-a|\n-', sas) # la liste des sections du sas
+    for section in sections :
+        contents = re.findall(formats["img"], section)
+        for content in contents :
+            if re.search(r'[^\w\s\-\(\)\.]', content) :
+                exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
+check_img_src(sas)
+
 # fin des verifications
 
-# remplacement des (caractères) "<" et ">".
-sas = re.sub(r"<(?!img src=\"|/?(span|b>|sup>|sub>))", "&lt;", sas)
-sas = re.sub(r"(?<!<span style=\"color:red;\"|\" /)>", "&gt;", sas)
-
-print(sas)
 if "\t" in sas :
     sas = sas.replace("\t", "    ")
+
+# modification du contenu des balises et des trous.
+def trim() :
+    global sas
+    for i in re.findall(formats["img"], sas) :
+        sas = sas.replace(f"<img src=\"{i}\" />", f"<img src=\"{i.strip()}\" />")
+    for i in re.findall(formats["span"], sas) :
+        sas = sas.replace(f"<span style=\"color:red;\">{i}</span>", f"<span style=\"color:red;\">{i.strip()}</span>")
+    for i in re.findall(formats["sup"], sas) :
+        sas = sas.replace(f"<sup>{i}</sup>", f"<sup>{i.strip()}</sup>")
+    for i in re.findall(formats["sub"], sas) :
+        sas = sas.replace(f"<sub>{i}</sub>", f"<sub>{i.strip()}</sub>")
+    for i in re.findall(formats["b"], sas) :
+        sas = sas.replace(f"<b>{i}</b>", f"<b>{i.strip()}</b>")
+    for a, b, c, d in re.findall(formats["trou complet"], sas) :
+        # texte = texte.replace("{{" + f"c{i[0]}::{i[1]}" + "}}", "{{" + f"c{i[0]}::{i[1].strip()}" + "}}")
+        # texte = texte.replace("{{" + f"c{i[0]}::{i[1]}::{i[3]}" + "}}", "{{" + f"c{i[0]}::{i[1].strip()}::{i[3].strip()}" + "}}")
+        sas = sas.replace("{{" + f"c{a}::{b}" + "}}", "{{" + f"c{a}::{b.strip()}" + "}}")
+        sas = sas.replace("{{" + f"c{a}::{b}::{d}" + "}}", "{{" + f"c{a}::{b.strip()}::{d.strip()}" + "}}")
+
+
+trim()
+print(sas)

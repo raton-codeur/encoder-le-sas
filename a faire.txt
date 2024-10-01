@@ -1,0 +1,8 @@
+verifier les trous dans deuxieme champ de section t
+
+verifier le nombre de changements de champs
+
+verifier une section non vide doit avoir un premier champ non vide
+
+verifier une section de type c2 doit avoir au moins ses 2 premiers champs non vides
+
