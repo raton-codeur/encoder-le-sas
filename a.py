@@ -144,18 +144,18 @@ print()
 def split_field() :
     global sas
     for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] :
-        print(f"on traite : \'{sections}\'")
         for i in range(len(sections)) :
             if (len(re.split(r"(?<!\\)@", sections[i])) > 2) :
                 exit("trop de champs dans la section :\n" + sections[i])
             sections[i] = re.split(r"(?<!\\)@", sections[i])
-    for sections in [sas["c2"]] :
-        print(f"on traite : \'{sections}\'")
-        for i in range(len(sections)) :
-            if (len(re.split(r"(?<!\\)@", sections[i])) > 3) :
-                exit("trop de champs dans la section :\n" + sections[i])
-            print(sections[i])
-            # sections[i] = re.split(r"(?<!\\)@", sections[i])
+        for i in range(len(sas["c2"])) :
+            if (len(re.split(r"(?<!\\)@", sas["c1"][i])) > 3) :
+                exit("trop de champs dans la section :\n" + sas["c2"][i])
+            sas["c2"][i] = re.split(r"(?<!\\)@", sas["c2"][i])
+        for i in range(len(sas["a"])) :
+            if (len(re.split(r"(?<!\\)@", sas["a"][i])) > 4) :
+                exit("trop de champs dans la section :\n" + sas["a"][i])
+            sas["a"][i] = re.split(r"(?<!\\)@", sas["a"][i])
 split_field()
 
 print_sas()
