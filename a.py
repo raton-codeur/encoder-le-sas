@@ -16,8 +16,6 @@ sas = f.read()
 f.close()
 sas = sas.strip()
 
-# debut des verifications
-
 # vérifier que le sas commence par un séparateur
 def starts_with_separator(sas) :
     for sep in ('---', '--', '-a', '-') :
@@ -48,13 +46,11 @@ def check_img_src(sas) :
                 exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
 check_img_src(sas)
 
-# fin des verifications
-
 if "\t" in sas :
     sas = sas.replace("\t", "    ")
 
 # modification du contenu des balises et des trous.
-def trim() :
+def trim_format() :
     global sas
     for i in re.findall(formats["img"], sas) :
         sas = sas.replace(f"<img src=\"{i}\" />", f"<img src=\"{i.strip()}\" />")
@@ -67,11 +63,101 @@ def trim() :
     for i in re.findall(formats["b"], sas) :
         sas = sas.replace(f"<b>{i}</b>", f"<b>{i.strip()}</b>")
     for a, b, c, d in re.findall(formats["trou complet"], sas) :
-        # texte = texte.replace("{{" + f"c{i[0]}::{i[1]}" + "}}", "{{" + f"c{i[0]}::{i[1].strip()}" + "}}")
-        # texte = texte.replace("{{" + f"c{i[0]}::{i[1]}::{i[3]}" + "}}", "{{" + f"c{i[0]}::{i[1].strip()}::{i[3].strip()}" + "}}")
         sas = sas.replace("{{" + f"c{a}::{b}" + "}}", "{{" + f"c{a}::{b.strip()}" + "}}")
         sas = sas.replace("{{" + f"c{a}::{b}::{d}" + "}}", "{{" + f"c{a}::{b.strip()}::{d.strip()}" + "}}")
+trim_format()
 
+# debut du remplissage des sections
 
-trim()
-print(sas)
+def get_first_separator(sas) :
+    for sep in ('---', '--', '-a', '-') :
+        if sas.startswith(sep) :
+            return sep
+    return None
+
+def first_split() :
+    global sas
+    sep = get_first_separator(sas)
+    sas = ["\n" + sep] + re.split(r'(\n---|\n--|\n-a|\n-)', sas[len(sep):]) # ["\n-", "a", "\n-", "b", ...]
+    sas = [sas[i:(i + 2)] for i in range(0, len(sas), 2)] # [["\n-", "a"], ["\n-", "b"], ...]
+first_split()
+
+# diviser le sas en sections
+def second_split() :
+    global sas
+    result = {"\n-": [], "\n--" : [], "\n---" : [], "\n-a" : []}
+    for sep, section in sas :
+        result[sep].append(section)
+    sas = result
+second_split()
+
+# commencer a remplir les sections
+def rename_sections() :
+    global sas
+    result = {"1" : [], "2" : [], "3" : [], "a" : []}
+    for sep, sections in sas.items() :
+        if sep == "\n-":
+            result["1"] = sections
+        elif sep == "\n--":
+            result["2"] = sections
+        elif sep == "\n---":
+            result["3"] = sections
+        elif sep == "\n-a":
+            result["a"] = sections
+    sas = result
+rename_sections()
+
+# trouver les sections t
+def distribute() :
+    global sas
+    result = {"c1" : [], "c2" : [], "c3" : [], "t1" : [], "t2" : [], "t3" : [], "a" : []}
+    for section in sas["1"] :
+        if re.search(formats["trou"], section) :
+            result["t1"].append(section)
+        else :
+            result["c1"].append(section)
+    for section in sas["2"] :
+        if re.search(formats["trou"], section) :
+            result["t2"].append(section)
+        else :
+            result["c2"].append(section)
+    for section in sas["3"] :
+        if re.search(formats["trou"], section) :
+            result["t3"].append(section)
+        else :
+            result["c3"].append(section)
+    for section in sas["a"] :
+        result["a"].append(section)
+    sas = result
+distribute()
+
+def print_sas() :
+    global sas
+    for type, sections in sas.items() :
+        print(f": {type} :")
+        print(sections)
+print_sas()
+print()
+
+# debut de la verification des champs
+
+def split_field() :
+    global sas
+    # for type, sections in sas.items() :
+    #     for i in range(len(sections)) :
+    #         sections[i] = sections[i].split("@")
+    for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] :
+        for i in range(len(sections)) :
+            if (len(re.split(r"(?<!\\)@", sections[i])) > 2) :
+                exit("trop de champs dans la section :\n" + sections[i])
+            sections[i] = re.split(r"(?<!\\)@", sections[i])
+    for sections in sas["c2"] :
+        for i in range(len(sections)) :
+            if (len(re.split(r"(?<!\\)@", sections[i])) > 3) :
+                exit("trop de champs dans la section :\n" + sections[i])
+            print(sections[i])
+            # sections[i] = re.split(r"(?<!\\)@", sections[i])
+split_field()
+
+print_sas()
+

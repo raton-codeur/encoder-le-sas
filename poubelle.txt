@@ -50,35 +50,11 @@ def print_sections() :
 
 
 
-# split le sas en liste de couples (séparateur, section)
-def get_first_separator(sas) :
-    for sep in ('---', '--', '-a', '-') :
-        if sas.startswith(sep) :
-            return sep
-    exit("le sas ne commence pas par un séparateur")
 
-def first_split() :
-    global sas
-    sep = get_first_separator(sas)
-    sas = ["\n" + sep] + re.split(r'(\n---|\n--|\n-a|\n-)', sas[len(sep):]) # ["\n-", "a", "\n-", "b", ...]
-    sas = [sas[i:(i + 2)] for i in range(0, len(sas), 2)] # [["\n-", "a"], ["\n-", "b"], ...]
-first_split()
 
-# diviser le sas en sections
-def second_split() :
-    global sas
-    result = {"\n-": [], "\n--" : [], "\n---" : [], "\n-a" : []}
-    for sep, section in sas :
-        result[sep].append(section)
-    sas = result
-second_split()
 
-def print_sas() :
-    global sas
-    for sep, sections in sas.items() :
-        print(f": {sep.strip()} :")
-        print(sections)
-# print_sas()
+
+
 
 
 
