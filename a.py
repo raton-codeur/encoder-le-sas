@@ -231,4 +231,46 @@ first_quote()
 
 print_sas()
 
+file_name = {"c1" : "1 - 1", "c2" : "2 - 2", "c3" : "1 - 3", "t1" : "3 - 1", "t2" : "4 - 2", "t3" : "3 - 3", "a" : "anglais"}
+def print_sizes() :
+    for type, sections in sas.items() :
+        print(f"{file_name[type]} : {len(sections)}")
+print_sizes()
+
 # création des fichiers.
+
+def write_sections(flux, section_name, nb_fields, end_field, end_section) :
+    for section in sas[section_name] :
+        for i in range(nb_fields - 1) :
+            flux.write(section[i] + end_field)
+        flux.write(section[nb_fields - 1] + end_section)
+
+# si il y a des sections de type c1
+if sas["c1"] :
+    with open("1 - 1.txt", "w") as f :
+        write_sections(f, "c1", 2, "\t", "\n")
+
+if sas["c2"] :
+    with open("2 - 2.txt", "w") as f :
+        write_sections(f, "c2", 3, "\t", "\n")
+
+if sas["c3"] :
+    with open("1 - 3.txt", "w") as f :
+        write_sections(f, "c3", 2, "\t", "\n")
+
+if sas["t1"] :
+    with open("3 - 1.txt", "w") as f :
+        write_sections(f, "t1", 2, "\t", "\n")
+
+if sas["t2"] :
+    with open("4 - 2.txt", "w") as f :
+        write_sections(f, "t2", 3, "\t", "\n")
+
+if sas["t3"] :
+    with open("3 - 3.txt", "w") as f :
+        write_sections(f, "t3", 2, "\t", "\n")
+
+if sas["a"] :
+    with open("anglais.txt", "w") as f :
+        write_sections(f, "a", 4, "\n", "\n-\n")
+

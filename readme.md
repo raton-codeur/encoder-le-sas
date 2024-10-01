@@ -62,13 +62,13 @@ on veut vérifier qu'il n'y a pas d'erreur dans le sas.
 si tout est correct, on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
-- le fichier `1 - 1` pour les sections `c1`
-- `2 - 2` pour les sections `c2`
-- `1 - 3` pour les sections `c3`
-- `3 - 1` pour les sections `t1`
-- `4 - 2` pour les sections `t2`
-- `3 - 3` pour les sections `t3`
-- `anglais` pour les sections `a`
+- `1 - 1.txt` pour les sections `c1`
+- `2 - 2.txt` pour les sections `c2`
+- `1 - 3.txt` pour les sections `c3`
+- `3 - 1.txt` pour les sections `t1`
+- `4 - 2.txt` pour les sections `t2`
+- `3 - 3.txt` pour les sections `t3`
+- `anglais.txt` pour les sections `a`
 
 on veut aussi déplacer les images mensionnées dans le sas vers `/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media`.
 
