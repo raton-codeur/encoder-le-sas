@@ -163,19 +163,11 @@ def split_field() :
     sas["a"] = split_1_section_type(sas["a"], nb_fields, 1)
 split_field()
 
-def trim_fields() :
-    global sas
-    for type, sections in sas.items() :
-        for section in sections :
-            for i in range(len(section)) :
-                section[i] = section[i].strip()
-trim_fields()
-
 def remove_empty() :
     """ parcourt les sections. si tous les champs d'une section sont vides, la section est supprimée """
     global sas
     for type, section in sas.items() :
-        sas[type] = [section for section in sas[type] if not all([field == '' for field in section])]
+        sas[type] = [section for section in sas[type] if not all([field.strip() == '' for field in section])]
 remove_empty()
 
 def get_empty_a() :
@@ -194,5 +186,49 @@ def check_trou() :
                 exit(f"erreur dans la section :\n{section}\ntrou dans le deuxieme champ")
 check_trou()
 
+def encode_echap() :
+    """\@
+    \n\-
+    \n\--
+    \n\---
+    \n\-)
+    """
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                section[i] = section[i].replace("\@", "@")
+                section[i] = section[i].replace("\n\-", "\n-")
+                section[i] = section[i].replace("\n\--", "\n--")
+                section[i] = section[i].replace("\n\---", "\n---")
+                section[i] = section[i].replace("\n\-)", "\n-)")
+encode_echap()
+
+def trim_fields() :
+    global sas
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                section[i] = section[i].strip()
+trim_fields()
+
+def encode_new_line() :
+    global sas
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                section[i] = section[i].replace("\n", "<br />")
+encode_new_line()
+
+def first_quote() :
+    """encoder le premier caractere \" dun champ par &quot;"""
+    global sas
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                if section[i].startswith('"') :
+                    section[i] = "&quot;" + section[i][1:]
+first_quote()
 
 print_sas()
+
+# création des fichiers.
