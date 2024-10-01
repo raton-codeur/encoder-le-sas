@@ -158,5 +158,16 @@ def split_field() :
         sas["a"][i] = re.split(r"(?<!\\)@", sas["a"][i])
 split_field()
 
+
+"""
+# Taille minimale souhaitée
+min_size = 5
+
+# Si la taille est inférieure à min_size, on ajoute des éléments vides
+if len(result) < min_size:
+    result.extend([''] * (min_size - len(result)))
+
+"""
+
 print_sas()
 
