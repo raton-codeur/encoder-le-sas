@@ -18,7 +18,7 @@ sas = sas.strip()
 
 # vérifier que le sas commence par un séparateur
 def starts_with_separator(sas) :
-    for sep in ('---', '--', '-a', '-') :
+    for sep in ('---', '--', '-)', '-') :
         if sas.startswith(sep) :
             return True
     return False
@@ -38,7 +38,7 @@ formats = {
 
 # verifier les caracteres dans lattribut src de balise img
 def check_img_src(sas) :
-    sections = re.split(r'\n---|\n--|\n-a|\n-', sas) # la liste des sections du sas
+    sections = re.split(r'\n---|\n--|\n-)|\n-', sas) # la liste des sections du sas
     for section in sections :
         contents = re.findall(formats["img"], section)
         for content in contents :
@@ -70,7 +70,7 @@ trim_format()
 # debut du remplissage des sections
 
 def get_first_separator(sas) :
-    for sep in ('---', '--', '-a', '-') :
+    for sep in ('---', '--', '-)', '-') :
         if sas.startswith(sep) :
             return sep
     return None
@@ -78,14 +78,14 @@ def get_first_separator(sas) :
 def first_split() :
     global sas
     sep = get_first_separator(sas)
-    sas = ["\n" + sep] + re.split(r'(\n---|\n--|\n-a|\n-)', sas[len(sep):]) # ["\n-", "a", "\n-", "b", ...]
+    sas = ["\n" + sep] + re.split(r'(\n---|\n--|\n-)|\n-)', sas[len(sep):]) # ["\n-", "a", "\n-", "b", ...]
     sas = [sas[i:(i + 2)] for i in range(0, len(sas), 2)] # [["\n-", "a"], ["\n-", "b"], ...]
 first_split()
 
 # diviser le sas en sections
 def second_split() :
     global sas
-    result = {"\n-": [], "\n--" : [], "\n---" : [], "\n-a" : []}
+    result = {"\n-": [], "\n--" : [], "\n---" : [], "\n-)" : []}
     for sep, section in sas :
         result[sep].append(section)
     sas = result
@@ -102,7 +102,7 @@ def rename_sections() :
             result["2"] = sections
         elif sep == "\n---":
             result["3"] = sections
-        elif sep == "\n-a":
+        elif sep == "\n-)":
             result["a"] = sections
     sas = result
 rename_sections()

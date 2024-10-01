@@ -28,7 +28,7 @@ un **séparateur** dans le sas peut être :
 - `\n-` pour le paquet 1
 - `\n--` pour le paquet 2
 - `\n---` pour le paquet 3
-- `\n-a` pour l'anglais
+- `\n-)` pour l'anglais
 
 une section est identifiée non seulement par le séparateur qui la précède mais aussi par son contenu. en effet :
 
