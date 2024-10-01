@@ -289,3 +289,10 @@ input("appuyez sur entrée pour supprimer le sas et les fichiers créés.")
 for type, section in sas.items() :
     if section :
         os.remove(f"{file_name[type]}.txt")
+
+os.remove(os.path.join(trash_dir, "9.txt"))
+for i in range(8, -1, -1) :
+    os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
+shutil.copy(sas_path, f"{trash_dir}/0.txt")
+with open(sas_path, "w") as f :
+    f.write("-\n")
