@@ -64,7 +64,7 @@ def trim_format() :
     for i in re.findall(formats["b"], sas) :
         sas = sas.replace(f"<b>{i}</b>", f"<b>{i.strip()}</b>")
     for a, b, c, d in re.findall(formats["trou complet"], sas) :
-        sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{}" + "}}")
+        sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
 trim_format()
 
 # debut du remplissage des sections
@@ -244,8 +244,9 @@ file_name = {
 
 def print_sizes() :
     for type, sections in sas.items() :
-        print(f"{file_name[type]} : {len(sections)}")
-print_sizes()
+        if (sections) :
+            print(f"{file_name[type]} : {len(sections)}")
+# print_sizes()
 
 # création des fichiers.
 
@@ -298,4 +299,4 @@ for type, section in sas.items() :
 # with open(sas_path, "w") as f :
 #     f.write("-\n")
 
-print(f"log : {trash_dir}/0.txt")
+# print(f"log : {trash_dir}/0.txt")
