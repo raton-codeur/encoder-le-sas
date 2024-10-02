@@ -1,2 +1,2 @@
--tr
--\)test
+-test
+-{{c1::test }}

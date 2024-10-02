@@ -64,8 +64,7 @@ def trim_format() :
     for i in re.findall(formats["b"], sas) :
         sas = sas.replace(f"<b>{i}</b>", f"<b>{i.strip()}</b>")
     for a, b, c, d in re.findall(formats["trou complet"], sas) :
-        sas = sas.replace("{{" + f"c{a}::{b}" + "}}", "{{" + f"c{a}::{b.strip()}" + "}}")
-        sas = sas.replace("{{" + f"c{a}::{b}::{d}" + "}}", "{{" + f"c{a}::{b.strip()}::{d.strip()}" + "}}")
+        sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{}" + "}}")
 trim_format()
 
 # debut du remplissage des sections
@@ -286,7 +285,7 @@ for fichier in fichiers :
     if is_in_sas(fichier) :
         os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
 
-input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
+# input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
 
 for type, section in sas.items() :
     if section :
