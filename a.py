@@ -67,14 +67,13 @@ def trim_format() :
         sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
 trim_format()
 
-# debut du remplissage des sections
-
 def get_first_separator(sas) :
-    for sep in ('---', '--', '-)', '-') :
+    for sep in '---', '--', '-)', '-' :
         if sas.startswith(sep) :
             return sep
     return None
 
+# on veut un truc du genre [["\n-", "a"], ["\n-", "b"], ...]
 def first_split() :
     global sas
     sep = get_first_separator(sas)
@@ -91,26 +90,21 @@ def second_split() :
     sas = result
 second_split()
 
-# commencer a remplir les sections
 def rename_sections() :
     global sas
-    result = {"1" : [], "2" : [], "3" : [], "a" : []}
-    for sep, sections in sas.items() :
-        if sep == "\n-":
-            result["1"] = sections
-        elif sep == "\n--":
-            result["2"] = sections
-        elif sep == "\n---":
-            result["3"] = sections
-        elif sep == "\n-)":
-            result["a"] = sections
+    result = {}
+    result["1"] = sas["\n-"]
+    result["2"] = sas["\n--"]
+    result["3"] = sas["\n---"]
+    result["a"] = sas["\n-)"]
     sas = result
 rename_sections()
 
 # trouver les sections t
-def distribute() :
+def distribute_c_and_t() :
     global sas
     result = {"c1" : [], "c2" : [], "c3" : [], "t1" : [], "t2" : [], "t3" : [], "a" : []}
+    result["a"] = sas["a"]
     for section in sas["1"] :
         if re.search(formats["trou"], section) :
             result["t1"].append(section)
@@ -126,10 +120,8 @@ def distribute() :
             result["t3"].append(section)
         else :
             result["c3"].append(section)
-    for section in sas["a"] :
-        result["a"].append(section)
     sas = result
-distribute()
+distribute_c_and_t()
 
 def print_sas() :
     global sas
