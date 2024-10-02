@@ -4,4 +4,3 @@ verifier une section non vide doit avoir un premier champ non vide
 
 verifier une section de type c2 doit avoir au moins ses 2 premiers champs non vides
 
-refaire le check img src pour apres que les sections soient split

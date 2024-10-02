@@ -15,16 +15,19 @@ output_dir = "."
 # trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
 # output_dir = "/Users/quentinhauuy/Downloads"
 
-with open(sas_path, "r") as f :
-    sas = f.read().strip() # le contenu trimé du sas
+def get_sas() :
+    """ renvoie le contenu trimé du sas """
+    with open(sas_path, "r") as f :
+        return f.read()
+sas = get_sas()
 
-# vérifie que le sas commence par un séparateur
-def starts_with_separator(sas) :
+def starts_with_separator() :
     if sas.startswith(('---', '--', '-)', '-')) :
         return True
     return False
-if not starts_with_separator(sas) :
-    exit("le sas ne commence pas par un séparateur")
+
+if not starts_with_separator() :
+    exit("erreur : le sas ne commence pas par un séparateur")
 
 # nom dun format -> regex
 formats = {
@@ -37,21 +40,18 @@ formats = {
     "trou complet" : r"\{\{c(\d+)::([\s\S]*?)(::([\s\S]*?))?\}\}"
 }
 
-# # verifier les caracteres dans lattribut src de balise img
-# def check_img_src(sas) :
-#     sections = re.split(r'\n---|\n--|\n-\)|\n-', sas) # la liste des sections du sas
-#     for section in sections :
-#         contents = re.findall(formats["img"], section)
-#         for content in contents :
-#             if re.search(r'[^\w\s\-\(\)\.]', content) :
-#                 exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
-# check_img_src(sas)
+def check_img_src() :
+    """ verifier les noms des img """
+    for content in re.findall(formats["img"], sas) :
+        if re.search(r'[^\w\s\-\(\)\.]', content) :
+            exit(f"erreur : nom d'image interdit : {content}")
+check_img_src()
 
 if "\t" in sas :
     sas = sas.replace("\t", "    ")
 
-# trim les balises et les trous
 def trim_format() :
+    """ trim les balises et les trous """
     global sas
     for i in re.findall(formats["img"], sas) :
         sas = sas.replace(f"<img src=\"{i}\" />", f"<img src=\"{i.strip()}\" />")
@@ -67,79 +67,58 @@ def trim_format() :
         sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
 trim_format()
 
-def get_first_separator(sas) :
+def get_first_separator() :
     for sep in '---', '--', '-)', '-' :
         if sas.startswith(sep) :
             return sep
     return None
 
-# on veut un truc du genre [["\n-", "a"], ["\n-", "b"], ...]
 def first_split() :
     global sas
-    sep = get_first_separator(sas)
+    sep = get_first_separator()
     sas = ["\n" + sep] + re.split(r'(\n---|\n--|\n-\)|\n-)', sas[len(sep):]) # ["\n-", "a", "\n-", "b", ...]
     sas = [sas[i:(i + 2)] for i in range(0, len(sas), 2)] # [["\n-", "a"], ["\n-", "b"], ...]
 first_split()
+# sas est maintenant un truc du genre [["\n-", "a"], ["\n-", "b"], ...]
 
-# diviser le sas en sections
+def rename_keys(sections) :
+    result = {}
+    result["1"] = sections["\n-"]
+    result["2"] = sections["\n--"]
+    result["3"] = sections["\n---"]
+    result["a"] = sections["\n-)"]
+    return result
+
 def second_split() :
+    """ divise le sas entre les sections 1, 2, 3 et a"""
     global sas
     result = {"\n-": [], "\n--" : [], "\n---" : [], "\n-)" : []}
     for sep, section in sas :
         result[sep].append(section)
-    sas = result
+    sas = rename_keys(result)
 second_split()
-def rename_sections() :
-    global sas
-    result = {}
-    result["1"] = sas["\n-"]
-    result["2"] = sas["\n--"]
-    result["3"] = sas["\n---"]
-    result["a"] = sas["\n-)"]
-    sas = result
-rename_sections()
 
-# verifier les caracteres dans lattribut src de balise img
-# def check_img_src(sas) :
-#     sections = re.split(r'\n---|\n--|\n-\)|\n-', sas) # la liste des sections du sas
-#     for section in sections :
-#         contents = re.findall(formats["img"], section)
-#         for content in contents :
-#             if re.search(r'[^\w\s\-\(\)\.]', content) :
-#                 exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
-# check_img_src(sas)
+def get_t(sections) :
+    """ renvoie les sections qui contiennent un trou """
+    result = []
+    for section in sections :
+        if re.search(formats["trou"], section) :
+            result.append(section)
+    return result
 
-# verifier les caracteres dans lattribut src de balise img
-def check_img_src(sas) :
-    for type, sections in sas.items() :
-        for section in sections :
-            for content in re.findall(formats["img"], section) :
-                if re.search(r'[^\w\s\-\(\)\.]', content) :
-                    exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
-check_img_src(sas)
-
-# trouver les sections t
-def distribute_c_and_t() :
+def distribute() :
+    """ distribue les sections entre c1, c2, c3, t1, t2, t3 et a """
     global sas
     result = {"c1" : [], "c2" : [], "c3" : [], "t1" : [], "t2" : [], "t3" : [], "a" : []}
     result["a"] = sas["a"]
-    for section in sas["1"] :
-        if re.search(formats["trou"], section) :
-            result["t1"].append(section)
-        else :
-            result["c1"].append(section)
-    for section in sas["2"] :
-        if re.search(formats["trou"], section) :
-            result["t2"].append(section)
-        else :
-            result["c2"].append(section)
-    for section in sas["3"] :
-        if re.search(formats["trou"], section) :
-            result["t3"].append(section)
-        else :
-            result["c3"].append(section)
+    result["t1"] = get_t(sas["1"])
+    result["t2"] = get_t(sas["2"])
+    result["t3"] = get_t(sas["3"])
+    result["c1"] = [section for section in sas["1"] if section not in result["t1"]]
+    result["c2"] = [section for section in sas["2"] if section not in result["t2"]]
+    result["c3"] = [section for section in sas["3"] if section not in result["t3"]]
     sas = result
-distribute_c_and_t()
+distribute()
 
 def print_sas() :
     global sas
@@ -148,37 +127,33 @@ def print_sas() :
             print(f": {type} :")
             print(sections)
 
-# debut de la verification des champs
-
-def split_1_section_type(sections, nb_fields, a = False) :
+def get_split(sections, nb_fields) :
+    """ renvoie la liste des listes de champs pour un type de section """
     for i in range(len(sections)) :
-        if (len(re.split(r"(?<!\\)@", sections[i])) > nb_fields) :
+        if (len(re.findall(r"(?<!\\)@", sections[i])) > nb_fields - 1) :
             exit("trop de champs dans la section :\n" + sections[i])
         sections[i] = re.split(r"(?<!\\)@", sections[i])
-        if a and len(sections[i]) == 2 :
+        if nb_fields == 4 and len(sections[i]) == 2 : # pour l'anglais quand 2 champs seulement sont donnés
             sections[i].extend(['', ''])
             sections[i][1], sections[i][2] = sections[i][2], sections[i][1]
         if (len(sections[i]) < nb_fields) :
             sections[i].extend([''] * (nb_fields - len(sections[i])))
     return sections
 
-# split les sections en champs
-def split_field() :
+def split_fields() :
+    """split les champs des sections"""    
     global sas
-    nb_fields = 2
-    for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] :
-        sections = split_1_section_type(sections, nb_fields)
-    nb_fields = 3
-    sas["c2"] = split_1_section_type(sas["c2"], nb_fields)
-    nb_fields = 4
-    sas["a"] = split_1_section_type(sas["a"], nb_fields, 1)
-split_field()
+    for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] : # les sections qui ont 2 champs
+        sections = get_split(sections, 2)
+    sas["c2"] = get_split(sas["c2"], 3)
+    sas["a"] = get_split(sas["a"], 4)
+split_fields()
 
 def remove_empty() :
     """ parcourt les sections. si tous les champs d'une section sont vides, la section est supprimée """
     global sas
-    for type, section in sas.items() :
-        sas[type] = [section for section in sas[type] if not all([field.strip() == '' for field in section])]
+    for type in sas :
+        sas[type] = [section for section in sas[type] if any([field.strip() for field in section])]
 remove_empty()
 
 def get_empty_a() :
@@ -258,8 +233,6 @@ def print_sizes() :
             print(f"{file_name[type]} : {len(sections)}")
 # print_sizes()
 
-# création des fichiers.
-
 # si le sas est vide
 if not any(sas.values()) :
     exit("sas vide")
@@ -272,6 +245,7 @@ def write_sections(section_name, nb_fields, end_field, end_section) :
                     f.write(section[i] + end_field)
                 f.write(section[nb_fields - 1] + end_section)
 
+# création des fichiers.
 write_sections("c1", 2, "\t", "\n")
 write_sections("c2", 3, "\t", "\n")
 write_sections("c3", 2, "\t", "\n")
@@ -282,9 +256,8 @@ write_sections("a", 4, "\n", "\n-\n")
 
 # copie des images
 
-fichiers = os.listdir(image_source_dir)
-
 def is_in_sas(fichier) :
+    """ renvoie ecq fichier est mentionné dans le sas """
     for type, sections in sas.items() :
         for section in sections :
             for field in section :
@@ -292,15 +265,21 @@ def is_in_sas(fichier) :
                     return True
     return False
 
-for fichier in fichiers :
-    if is_in_sas(fichier) :
-        os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
+def move_img() :
+    """ déplace les images """
+    fichiers = os.listdir(image_source_dir)
+    for fichier in fichiers :
+        if is_in_sas(fichier) :
+            os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
+move_img()
 
 # input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
 
 for type, section in sas.items() :
     if section :
         os.remove(f"{file_name[type]}.txt")
+
+# mise à jour de la poubelle
 
 # os.remove(os.path.join(trash_dir, "9.txt"))
 # for i in range(8, -1, -1) :
