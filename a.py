@@ -4,20 +4,24 @@ import re
 import os
 import shutil
 
-sas_path = "/Users/quentinhauuy/Documents/à rentrer/sas.txt"
-image_source_dir = "/Users/quentinhauuy/Downloads"
-image_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
-trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
-output_dir = "/Users/quentinhauuy/Downloads"
+sas_path = "sas.txt"
+image_source_dir = "."
+image_dest_dir = "."
+trash_dir = "."
+output_dir = "."
+# sas_path = "/Users/quentinhauuy/Documents/à rentrer/sas.txt"
+# image_source_dir = "/Users/quentinhauuy/Downloads"
+# image_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
+# trash_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash"
+# output_dir = "/Users/quentinhauuy/Downloads"
 
 with open(sas_path, "r") as f :
-    sas = f.read().strip()
+    sas = f.read().strip() # le contenu trimé du sas
 
-# vérifier que le sas commence par un séparateur
+# vérifie que le sas commence par un séparateur
 def starts_with_separator(sas) :
-    for sep in ('---', '--', '-)', '-') :
-        if sas.startswith(sep) :
-            return True
+    if sas.startswith(('---', '--', '-)', '-')) :
+        return True
     return False
 if not starts_with_separator(sas) :
     exit("le sas ne commence pas par un séparateur")
@@ -46,7 +50,7 @@ check_img_src(sas)
 if "\t" in sas :
     sas = sas.replace("\t", "    ")
 
-# modification du contenu des balises et des trous.
+# trim les balises et les trous
 def trim_format() :
     global sas
     for i in re.findall(formats["img"], sas) :
@@ -288,11 +292,11 @@ for type, section in sas.items() :
     if section :
         os.remove(f"{file_name[type]}.txt")
 
-os.remove(os.path.join(trash_dir, "9.txt"))
-for i in range(8, -1, -1) :
-    os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
-shutil.copy(sas_path, f"{trash_dir}/0.txt")
-with open(sas_path, "w") as f :
-    f.write("-\n")
+# os.remove(os.path.join(trash_dir, "9.txt"))
+# for i in range(8, -1, -1) :
+#     os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
+# shutil.copy(sas_path, f"{trash_dir}/0.txt")
+# with open(sas_path, "w") as f :
+#     f.write("-\n")
 
 print(f"log : {trash_dir}/0.txt")
