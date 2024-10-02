@@ -37,15 +37,15 @@ formats = {
     "trou complet" : r"\{\{c(\d+)::([\s\S]*?)(::([\s\S]*?))?\}\}"
 }
 
-# verifier les caracteres dans lattribut src de balise img
-def check_img_src(sas) :
-    sections = re.split(r'\n---|\n--|\n-\)|\n-', sas) # la liste des sections du sas
-    for section in sections :
-        contents = re.findall(formats["img"], section)
-        for content in contents :
-            if re.search(r'[^\w\s\-\(\)\.]', content) :
-                exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
-check_img_src(sas)
+# # verifier les caracteres dans lattribut src de balise img
+# def check_img_src(sas) :
+#     sections = re.split(r'\n---|\n--|\n-\)|\n-', sas) # la liste des sections du sas
+#     for section in sections :
+#         contents = re.findall(formats["img"], section)
+#         for content in contents :
+#             if re.search(r'[^\w\s\-\(\)\.]', content) :
+#                 exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
+# check_img_src(sas)
 
 if "\t" in sas :
     sas = sas.replace("\t", "    ")
@@ -89,7 +89,6 @@ def second_split() :
         result[sep].append(section)
     sas = result
 second_split()
-
 def rename_sections() :
     global sas
     result = {}
@@ -99,6 +98,25 @@ def rename_sections() :
     result["a"] = sas["\n-)"]
     sas = result
 rename_sections()
+
+# verifier les caracteres dans lattribut src de balise img
+# def check_img_src(sas) :
+#     sections = re.split(r'\n---|\n--|\n-\)|\n-', sas) # la liste des sections du sas
+#     for section in sections :
+#         contents = re.findall(formats["img"], section)
+#         for content in contents :
+#             if re.search(r'[^\w\s\-\(\)\.]', content) :
+#                 exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
+# check_img_src(sas)
+
+# verifier les caracteres dans lattribut src de balise img
+def check_img_src(sas) :
+    for type, sections in sas.items() :
+        for section in sections :
+            for content in re.findall(formats["img"], section) :
+                if re.search(r'[^\w\s\-\(\)\.]', content) :
+                    exit(f"erreur dans la section :\n{section}\n\ncaractère interdit dans l'attribut src")
+check_img_src(sas)
 
 # trouver les sections t
 def distribute_c_and_t() :
