@@ -58,8 +58,7 @@ un **texte de balise** fait référence au contenu de l'attribut *src* de la bal
 
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas.
-si tout est correct, on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
+on veut vérifier qu'il n'y a pas d'erreur dans le sas et on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
 - `1 - 1.txt` pour les sections `c1`
@@ -94,12 +93,12 @@ si on veut utiliser le caractère `@` sans indiquer de changement de champ, on d
 
 les tabulations doivent être encodées par 4 espaces.
 
-les retours à la ligne doivent être encodés par `<br />`.
-
 les champs, les textes de balise et les textes de trou doivent être trimés.
 les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit devenir `\na`.
 
-le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple). il doit donc toujours y avoir le bon nombre de changements de champ.
+les retours à la ligne doivent être encodés par `<br />`.
+
+le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
@@ -111,13 +110,13 @@ les changements de champ doivent être encodés par `\t`.
 
 ## pour les sections `a`
 
+lorsque seulement deux champs sont spécifiés, ce sont les champs `Anglais` et `Français`.
+
 les changements de section doivent être encodés par `\n-\n`.
 
 les changements de champ doivent être encodés par `\n`.
 
 les champs vides doivent être encodés par `<p></p>`.
-
-lorsque seulement deux champs sont spécifiés, ce sont les champs `Anglais` et `Français`.
 
 # divers
 

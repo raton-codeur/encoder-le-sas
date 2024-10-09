@@ -18,16 +18,17 @@ output_dir = "."
 def get_sas() :
     """ renvoie le contenu trimé du sas """
     with open(sas_path, "r") as f :
-        return f.read()
+        return f.read().strip()
 sas = get_sas()
 
-def starts_with_separator() :
-    if sas.startswith(('---', '--', '-)', '-')) :
-        return True
-    return False
+if "\t" in sas :
+    sas = sas.replace("\t", "    ")
 
-if not starts_with_separator() :
-    exit("erreur : le sas ne commence pas par un séparateur")
+def trim_lines() :
+    """ trim les lignes de leurs espaces """
+    global sas
+    sas = "\n".join([line.strip() for line in sas.split("\n")])
+trim_lines()
 
 # nom dun format -> regex
 formats = {
@@ -47,8 +48,13 @@ def check_img_src() :
             exit(f"erreur : nom d'image interdit : {content}")
 check_img_src()
 
-if "\t" in sas :
-    sas = sas.replace("\t", "    ")
+def starts_with_separator() :
+    if sas.startswith(('---', '--', '-)', '-')) :
+        return True
+    return False
+
+if not starts_with_separator() :
+    exit("erreur : le sas ne commence pas par un séparateur")
 
 def trim_format() :
     """ trim les balises et les trous """
@@ -97,9 +103,18 @@ def second_split() :
         result[sep].append(section)
     sas = rename_keys(result)
 second_split()
+# le sas est maintenant un dictionnaire avec les clés "1", "2", "3" et "a" et les valeurs les sections correspondantes
+
+def delete_echap_at_beginning() :
+    """ supprime les échappements pour les changements de sections comme \n\- ou \n\-) par exemple """
+    global sas
+    for sections in sas.values() :
+        for i in range(len(sections)) :
+            sections[i] = re.sub(r"\n\\(---|--|-|\))", r"\n\1", sections[i])
+delete_echap_at_beginning()
 
 def get_t(sections) :
-    """ renvoie les sections qui contiennent un trou """
+    """ renvoie la liste des sections de "sections" qui contiennent un trou """
     result = []
     for section in sections :
         if re.search(formats["trou"], section) :
@@ -119,6 +134,7 @@ def distribute() :
     result["c3"] = [section for section in sas["3"] if section not in result["t3"]]
     sas = result
 distribute()
+# le sas est maintenant un dictionnaire avec les clés "c1", "c2", "c3", "t1", "t2", "t3" et "a" et les valeurs les sections correspondantes
 
 def print_sas() :
     global sas
@@ -128,14 +144,14 @@ def print_sas() :
             print(sections)
 
 def get_split(sections, nb_fields) :
-    """ renvoie la liste des listes de champs pour un type de section """
+    """ renvoie la liste des sections qui deviennent elles mêmes des listes de champs """
     for i in range(len(sections)) :
         if (len(re.findall(r"(?<!\\)@", sections[i])) > nb_fields - 1) :
             exit("trop de champs dans la section :\n" + sections[i])
         sections[i] = re.split(r"(?<!\\)@", sections[i])
         if nb_fields == 4 and len(sections[i]) == 2 : # pour l'anglais quand 2 champs seulement sont donnés
-            sections[i].extend(['', ''])
-            sections[i][1], sections[i][2] = sections[i][2], sections[i][1]
+            sections[i].insert(1, '')
+            sections[i].append('')
         if (len(sections[i]) < nb_fields) :
             sections[i].extend([''] * (nb_fields - len(sections[i])))
     return sections
@@ -149,14 +165,47 @@ def split_fields() :
     sas["a"] = get_split(sas["a"], 4)
 split_fields()
 
-def remove_empty() :
+def trim_fields() :
+    """ trim les champs """
+    global sas
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                section[i] = section[i].strip() # le field d'indice i de la section est trimé
+trim_fields()
+
+def remove_empty_sections() :
     """ parcourt les sections. si tous les champs d'une section sont vides, la section est supprimée """
     global sas
-    for type in sas :
-        sas[type] = [section for section in sas[type] if any([field.strip() for field in section])]
-remove_empty()
+    for type, sections in sas.items() :
+        sas[type] = [section for section in sections if any(section)]
+remove_empty_sections()
+
+def check_trou() :
+    """ vérifie qu'il n'y a pas de trou dans les deuxièmes champs """
+    for type in "t1", "t2", "t3" :
+        for section in sas[type] :
+            if re.search(formats["trou"], section[1]) :
+                exit(f"erreur : trou dans le deuxième champ :\n{section}\n")
+check_trou()
+
+def check_first_field() :
+    """ vérifie que les sections ont un premier champ non vide """
+    for type, sections in sas.items() :
+        for section in sections :
+            if section[0] == '' :
+                exit(f"erreur : premier champ vide :\n{section}")
+check_first_field()
+
+def check_c2() :
+    """ vérifie que les sections de c2 ont un deuxième champ non vide """
+    for section in sas["c2"] :
+        if section[1] == '' :
+            exit(f"erreur : deuxième champ vide :\n{section}")
+check_c2()
 
 def get_empty_a() :
+    """ remplace les champs vides de a par <p></p> """
     global sas
     for section in sas["a"] :
         for i in range(len(section)) :
@@ -164,40 +213,16 @@ def get_empty_a() :
                 section[i] = "<p></p>"
 get_empty_a()
 
-def check_trou() :
-    global sas
-    for type in "t1", "t2", "t3" :
-        for section in sas[type] :
-            if re.search(formats["trou"], section[1]) :
-                exit(f"erreur dans la section :\n{section}\ntrou dans le deuxieme champ")
-check_trou()
-
-def encode_echap() :
-    """\@
-    \n\-
-    \n\--
-    \n\---
-    \n\-)
-    """
+def get_at_sign() :
+    """ encode les @ échappées """
     for type, sections in sas.items() :
         for section in sections :
             for i in range(len(section)) :
                 section[i] = section[i].replace("\@", "@")
-                section[i] = section[i].replace("\n\-", "\n-")
-                section[i] = section[i].replace("\n\--", "\n--")
-                section[i] = section[i].replace("\n\---", "\n---")
-                section[i] = section[i].replace("\n\-)", "\n-)")
-encode_echap()
-
-def trim_fields() :
-    global sas
-    for type, sections in sas.items() :
-        for section in sections :
-            for i in range(len(section)) :
-                section[i] = section[i].strip()
-trim_fields()
+get_at_sign()
 
 def encode_new_line() :
+    """ encode les \n par <br /> """
     global sas
     for type, sections in sas.items() :
         for section in sections :
@@ -206,7 +231,7 @@ def encode_new_line() :
 encode_new_line()
 
 def first_quote() :
-    """encoder le premier caractere \" dun champ par &quot;"""
+    """encode le premier caractere \" dun champ par &quot;"""
     global sas
     for type, sections in sas.items() :
         for section in sections :
@@ -217,75 +242,75 @@ first_quote()
 
 print_sas()
 
-file_name = {
-    "c1" : "1 - 1",
-    "c2" : "2 - 2",
-    "c3" : "1 - 3",
-    "t1" : "3 - 1",
-    "t2" : "4 - 2",
-    "t3" : "3 - 3",
-    "a" : "anglais"
-}
+# file_name = {
+#     "c1" : "1 - 1",
+#     "c2" : "2 - 2",
+#     "c3" : "1 - 3",
+#     "t1" : "3 - 1",
+#     "t2" : "4 - 2",
+#     "t3" : "3 - 3",
+#     "a" : "anglais"
+# }
 
-def print_sizes() :
-    for type, sections in sas.items() :
-        if (sections) :
-            print(f"{file_name[type]} : {len(sections)}")
-# print_sizes()
+# def print_sizes() :
+#     for type, sections in sas.items() :
+#         if (sections) :
+#             print(f"{file_name[type]} : {len(sections)}")
+# # print_sizes()
 
-# si le sas est vide
-if not any(sas.values()) :
-    exit("sas vide")
+# # si le sas est vide
+# if not any(sas.values()) :
+#     exit("sas vide")
 
-def write_sections(section_name, nb_fields, end_field, end_section) :
-    if sas[section_name] :
-        with open(os.path.join(output_dir, f"{file_name[section_name]}.txt"), "w") as f :
-            for section in sas[section_name] :
-                for i in range(nb_fields - 1) :
-                    f.write(section[i] + end_field)
-                f.write(section[nb_fields - 1] + end_section)
+# def write_sections(section_name, nb_fields, end_field, end_section) :
+#     if sas[section_name] :
+#         with open(os.path.join(output_dir, f"{file_name[section_name]}.txt"), "w") as f :
+#             for section in sas[section_name] :
+#                 for i in range(nb_fields - 1) :
+#                     f.write(section[i] + end_field)
+#                 f.write(section[nb_fields - 1] + end_section)
 
-# création des fichiers.
-write_sections("c1", 2, "\t", "\n")
-write_sections("c2", 3, "\t", "\n")
-write_sections("c3", 2, "\t", "\n")
-write_sections("t1", 2, "\t", "\n")
-write_sections("t2", 3, "\t", "\n")
-write_sections("t3", 2, "\t", "\n")
-write_sections("a", 4, "\n", "\n-\n")
+# # création des fichiers.
+# write_sections("c1", 2, "\t", "\n")
+# write_sections("c2", 3, "\t", "\n")
+# write_sections("c3", 2, "\t", "\n")
+# write_sections("t1", 2, "\t", "\n")
+# write_sections("t2", 3, "\t", "\n")
+# write_sections("t3", 2, "\t", "\n")
+# write_sections("a", 4, "\n", "\n-\n")
 
-# copie des images
+# # copie des images
 
-def is_in_sas(fichier) :
-    """ renvoie ecq fichier est mentionné dans le sas """
-    for type, sections in sas.items() :
-        for section in sections :
-            for field in section :
-                if fichier in field :
-                    return True
-    return False
+# def is_in_sas(fichier) :
+#     """ renvoie ecq fichier est mentionné dans le sas """
+#     for type, sections in sas.items() :
+#         for section in sections :
+#             for field in section :
+#                 if fichier in field :
+#                     return True
+#     return False
 
-def move_img() :
-    """ déplace les images """
-    fichiers = os.listdir(image_source_dir)
-    for fichier in fichiers :
-        if is_in_sas(fichier) :
-            os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
-move_img()
+# def move_img() :
+#     """ déplace les images """
+#     fichiers = os.listdir(image_source_dir)
+#     for fichier in fichiers :
+#         if is_in_sas(fichier) :
+#             os.rename(os.path.join(image_source_dir, fichier), os.path.join(image_dest_dir, fichier))
+# move_img()
 
-# input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
+# # input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
 
-for type, section in sas.items() :
-    if section :
-        os.remove(f"{file_name[type]}.txt")
+# for type, section in sas.items() :
+#     if section :
+#         os.remove(f"{file_name[type]}.txt")
 
-# mise à jour de la poubelle
+# # mise à jour de la poubelle
 
-# os.remove(os.path.join(trash_dir, "9.txt"))
-# for i in range(8, -1, -1) :
-#     os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
-# shutil.copy(sas_path, f"{trash_dir}/0.txt")
-# with open(sas_path, "w") as f :
-#     f.write("-\n")
+# # os.remove(os.path.join(trash_dir, "9.txt"))
+# # for i in range(8, -1, -1) :
+# #     os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
+# # shutil.copy(sas_path, f"{trash_dir}/0.txt")
+# # with open(sas_path, "w") as f :
+# #     f.write("-\n")
 
-# print(f"log : {trash_dir}/0.txt")
+# # print(f"log : {trash_dir}/0.txt")
