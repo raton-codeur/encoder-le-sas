@@ -1,0 +1,11 @@
+
+
+rajouter 40 nouvelles lignes quand on réinitialise le sas
+
+
+revoir le dossier des capture d'écran pour anki
+Documents/to_learn/sas/images
+
+
+vérfier que les balises img correspondent bien à des images du dossier image_src
+
