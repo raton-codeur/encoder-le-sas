@@ -11,7 +11,7 @@ il y a 4 **types de flashcards** Anki :
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
 
-**sas** est le fichier `/Users/quentinhauuy/Documents/à rentrer/sas.txt`. il contient une succession de **séparateurs** et de **sections**.
+**sas** est le fichier `/Users/quentinhauuy/Documents/apprendre/sas_anki/sas.txt`. il contient une succession de **séparateurs** et de **sections**.
 
 il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** différentes possibles dans le sas :
 - `c1` pour type 1 et paquet 1
@@ -21,7 +21,7 @@ il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** diffé
 - `t2` pour type 4 et paquet 2
 - `t3` pour type 3 et paquet 3
 
-il y a aussi les sections d'anglais (`a`) pour les flashcards Mosalingua, avec les champs `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
+il y a aussi les sections `m` pour les flashcards Mosalingua, avec les champs (par exemple, pour l'anglais :) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
 un **séparateur** dans le sas peut être :
