@@ -91,3 +91,23 @@ def trim() :
 #         sas[i] = "e"
 # print(sas)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # input("appuyez sur entrée pour supprimer les fichiers créés et réinitialiser le sas.")
+
+# for type, section in sas.items() :
+#     if section :
+#         os.remove(f"{file_name[type]}.txt")

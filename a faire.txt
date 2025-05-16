@@ -7,5 +7,8 @@ revoir le dossier des capture d'écran pour anki
 Documents/to_learn/sas/images
 
 
-vérfier que les balises img correspondent bien à des images du dossier image_src
+
+
+créer une extension .sas pour avoir une coloration syntaxique claire dans vscode
+recherches sur yo code
 
