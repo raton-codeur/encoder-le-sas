@@ -1,4 +1,4 @@
-# infos générales et définitions
+# définitions
 
 **`\t`** représente le caractère *tabulation horizontale*.
 
