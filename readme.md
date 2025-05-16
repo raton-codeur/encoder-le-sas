@@ -66,7 +66,9 @@ une **image** est un texte représentant un chemin vers un fichier.
 
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas, puis on veut l'**encoder**, c'est-à-dire le diviser en plusieurs fichiers formatés.
+on veut vérifier qu'il n'y a pas d'erreur dans le sas. sinon, on doit pouvoir remonter facilement à la source de l'erreur.
+
+on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
 - `1 - 1.txt` pour les sections `c1`
@@ -83,7 +85,7 @@ enfin, on veut réinitialiser le sas et supprimer les fichiers créés. on veut 
 
 # ce qu'il faut vérifier dans le sas
 
-le texte de l'attribut *src* d'une balise *img*, une fois trimé, ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
+le texte de l'attribut *src* d'une balise *img* doit correspondre à un fichier existant et, une fois trimé, il ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
 
 aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
@@ -110,7 +112,7 @@ le nombre de champs encodé doit toujours être respecté (même si le nombre de
 
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
-les chevrons qui ne font pas partie d'une balise autorisée doivent être encodés par `&lt;` et `&gt;`.
+`<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf pour les balises définies précédemment).
 
 ## pour toutes les sections sauf `ms`
 
