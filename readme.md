@@ -1,17 +1,21 @@
 # infos générales et définitions
 
+**`\t`** représente le caractère *tabulation horizontale*.
+
+**`\n`** représente le caractère *retour à la ligne*.
+
+le **sas** est un fichier texte. il contient une succession de **séparateurs** et de **sections**.
+
 il y a 3 **paquets de flashcards** sur Anki :
 - `1 - base`
 - `2 - taper`
 - `3 - écrire`
 
-il y a 4 **types de flashcards** Anki :
+il y a 4 **types de flashcards** sur Anki :
 - `1 - carte` composé des **champs** `Recto` et `Verso`
 - `2 - carte à taper` composé des champs `Recto`, `Verso` et `Extra`
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
-
-**sas** est un fichier texte. il contient une succession de **séparateurs** et de **sections**.
 
 il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** différentes possibles dans le sas :
 - `c1` pour type 1 et paquet 1
@@ -24,7 +28,7 @@ il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** diffé
 il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais :) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
-un **séparateur** dans le sas peut être :
+un **séparateur** peut être :
 - `\n-` pour le paquet 1
 - `\n--` pour le paquet 2
 - `\n---` pour le paquet 3
@@ -42,6 +46,10 @@ un **trou** est une chaîne de caractères de la forme `{{c` + [ un nombre ] + `
 
 un **changement de champ** au sein d'une section est indiqué par `@`.
 
+un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
+
+**trimer** un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
+
 un champ, ou plus généralement un texte, est **vide** s'il ne contient que des caractères blancs. une section est vide si tous ses champs sont vides.
 
 les **balises** du sas sont :
@@ -55,14 +63,6 @@ les **balises** du sas sont :
 un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
 une **image** est une string représentant un chemin vers un fichier.
-
-**`\t`** représente le caractère *tabulation horizontale*.
-
-**`\n`** représente le caractère *retour à la ligne*.
-
-un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
-
-**trimer** un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
 
 # ce qu'on veut faire
 
