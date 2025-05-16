@@ -11,7 +11,7 @@ il y a 4 **types de flashcards** Anki :
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
 
-**sas** est le fichier `/Users/quentinhauuy/Documents/apprendre/sas_anki/sas.txt`. il contient une succession de **séparateurs** et de **sections**.
+**sas** est un fichier texte. il contient une succession de **séparateurs** et de **sections**.
 
 il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** différentes possibles dans le sas :
 - `c1` pour type 1 et paquet 1
@@ -21,14 +21,14 @@ il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** diffé
 - `t2` pour type 4 et paquet 2
 - `t3` pour type 3 et paquet 3
 
-il y a aussi les sections `m` pour les flashcards Mosalingua, avec les champs (par exemple, pour l'anglais :) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
+il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais :) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
 un **séparateur** dans le sas peut être :
 - `\n-` pour le paquet 1
 - `\n--` pour le paquet 2
 - `\n---` pour le paquet 3
-- `\n-)` pour l'anglais
+- `\n-)` pour mosalingua
 
 une section est identifiée non seulement par le séparateur qui la précède mais aussi par son contenu. en effet :
 
@@ -44,8 +44,6 @@ un **changement de champ** au sein d'une section est indiqué par `@`.
 
 un champ, ou plus généralement un texte, est **vide** s'il ne contient que des caractères blancs. une section est vide si tous ses champs sont vides.
 
-le sas peut contenir des noms d'**images** qui se situent dans le dossier `/Users/quentinhauuy/Downloads`.
-
 les **balises** du sas sont :
 
 - `<img src="" />`
@@ -56,9 +54,19 @@ les **balises** du sas sont :
 
 un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
+une **image** est une string représentant un chemin vers un fichier.
+
+**`\t`** représente le caractère *tabulation horizontale*.
+
+**`\n`** représente le caractère *retour à la ligne*.
+
+un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
+
+**trimer** un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
+
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas et on veut **encoder** le sas, c'est-à-dire, le re-diviser en plusieurs fichiers formatés.
+on veut vérifier qu'il n'y a pas d'erreur dans le sas, puis on veut l'**encoder**, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
 - `1 - 1.txt` pour les sections `c1`
@@ -67,13 +75,13 @@ chaque fichier produit doit correspondre à un type de section :
 - `3 - 1.txt` pour les sections `t1`
 - `4 - 2.txt` pour les sections `t2`
 - `3 - 3.txt` pour les sections `t3`
-- `anglais.txt` pour les sections `a`
+- `mosalingua.txt` pour les sections `ms`
 
-on veut aussi déplacer les images mensionnées dans le sas vers `/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media`.
+on veut aussi vérifier que les images citées dans le sas existent et les déplacer dans un nouveau dossier.
 
-dans un deuxième temps, on veut réinitialiser le sas et supprimer les fichiers créés. on veut garder une copie des derniers sas traités dans le dossier `/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/sas.trash`.
+enfin, on veut réinitialiser le sas et supprimer les fichiers créés. on veut garder une copie des 10 derniers sas traités.
 
-# règles pour le sas
+# ce qu'il faut vérifier dans le sas
 
 le texte de l'attribut *src* d'une balise *img*, une fois trimé, ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
 
@@ -98,17 +106,17 @@ les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit dev
 
 les retours à la ligne doivent être encodés par `<br />`.
 
-le nombre de champs dans un texte encodé doit toujours être respecté (même si un champ est vide par exemple). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
+le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas, par exemple). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
-## pour toutes les sections sauf `a`
+## pour toutes les sections sauf `ms`
 
 il doit y avoir une section encodée par ligne.
 
 les changements de champ doivent être encodés par `\t`.
 
-## pour les sections `a`
+## pour les sections `ms`
 
 lorsque seulement deux champs sont spécifiés, ce sont les champs `Anglais` et `Français`.
 
@@ -117,13 +125,3 @@ les changements de section doivent être encodés par `\n-\n`.
 les changements de champ doivent être encodés par `\n`.
 
 les champs vides doivent être encodés par `<p></p>`.
-
-# divers
-
-`\t` représente le caractère *tabulation horizontale*.
-
-`\n` représente le caractère *retour à la ligne*.
-
-un *caractère blanc* est un espace, un retour à la ligne ou une tabulation.
-
-*trimer* un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
