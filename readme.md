@@ -1,4 +1,4 @@
-# définitions
+# infos générales et définitions
 
 **`\t`** représente le caractère *tabulation horizontale*.
 
@@ -6,18 +6,18 @@
 
 le **sas** est un fichier texte. il contient une succession de **séparateurs** et de **sections**.
 
-il y a 3 **paquets de flashcards** sur Anki :
+il y a 3 **paquets** de flashcards Anki :
 - `1 - base`
 - `2 - taper`
 - `3 - écrire`
 
-il y a 4 **types de flashcards** sur Anki :
+il y a 4 **types** de flashcards Anki :
 - `1 - carte` composé des **champs** `Recto` et `Verso`
 - `2 - carte à taper` composé des champs `Recto`, `Verso` et `Extra`
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
 
-il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** différentes possibles dans le sas :
+il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** différentes possibles :
 - `c1` pour type 1 et paquet 1
 - `c2` pour type 2 et paquet 2
 - `c3` pour type 1 et paquet 3
@@ -52,7 +52,7 @@ un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
 
 un champ, ou plus généralement un texte, est **vide** s'il ne contient que des caractères blancs. une section est vide si tous ses champs sont vides.
 
-les **balises** du sas sont :
+les **balises** peuvent être :
 
 - `<img src="" />`
 - `<span style="color:red;">` et `</span>`
@@ -62,7 +62,7 @@ les **balises** du sas sont :
 
 un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
-une **image** est une string représentant un chemin vers un fichier.
+une **image** est un texte représentant un chemin vers un fichier.
 
 # ce qu'on veut faire
 
@@ -109,6 +109,8 @@ les retours à la ligne doivent être encodés par `<br />`.
 le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas, par exemple). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
+
+les chevrons qui ne font pas partie d'une balise autorisée doivent être encodés par `&lt;` et `&gt;`.
 
 ## pour toutes les sections sauf `ms`
 
