@@ -46,7 +46,7 @@ cependant, une section de type `t` comporte au moins un **trou**. c'est ce qui l
 
 un **trou** est une chaîne de caractères de la forme `{{c` + [ un nombre ] + `::` + [ un texte ] (+ `::` + [ un texte ]) + `}}`.
 
-une **insertion de prononciation** est chaîne de caractères de la forme : `//` + [ un texte ] + `//`.
+une **insertion de prononciation** est chaîne de caractères de la forme : `//` + [ un **texte phonétique** ] + `//`.
 
 un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
 
@@ -64,7 +64,7 @@ les **balises** peuvent être :
 
 un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
-une **image_path** est une chaine de caractères représentant un chemin vers un fichier.
+une **image_path** est une chaîne de caractères représentant un chemin vers un fichier.
 
 # ce qu'on veut faire
 
@@ -95,26 +95,30 @@ il n'est pas nécessaire que tous les champs soient non vides ni même spécifi�
 
 il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
 
-si on veut utiliser la chaine de caractères `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
-
-si on veut utiliser le caractère `@` sans indiquer de changement de champ, on doit utiliser `\@`.
-
 # règles d'encodage
+
+# échappement
+
+si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
+
+si on veut encoder `@` sans indiquer de changement de champ, on doit utiliser `\@`.
+
+si on veut utiliser `//` sans insérer de prononciation, on doit utiliser `\//`.
 
 ## pour toutes les sections
 
 les tabulations doivent être encodées par 4 espaces.
 
-les champs, les textes de balise et les textes de trou doivent être trimés.
-les lignes doivent être trimées de leurs espaces. par exemple, `\n a` doit devenir `\na`.
+les champs, les textes de balises, les textes phonétiques et les textes de trou doivent être trimés.
+les lignes doivent être trimées de leurs espaces (et tabulations). par exemple, `\n a` doit devenir `\na`.
 
 les retours à la ligne doivent être encodés par `<br />`.
 
-le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas, par exemple). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
+le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
-`<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf pour les balises définies précédemment).
+`<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf si utilisés dans les balises définies, où ils sont alors encodés tels quels).
 
 ## pour toutes les sections sauf `ms`
 
@@ -131,3 +135,4 @@ les changements de section doivent être encodés par `\n-\n`.
 les changements de champ doivent être encodés par `\n`.
 
 les champs vides doivent être encodés par `<p></p>`.
+
