@@ -3,11 +3,6 @@
 rajouter 40 nouvelles lignes quand on réinitialise le sas
 
 
-revoir le dossier des capture d'écran pour anki
-Documents/to_learn/sas/images
-
-
-
 
 créer une extension .sas pour avoir une coloration syntaxique claire dans vscode
 recherches sur yo code

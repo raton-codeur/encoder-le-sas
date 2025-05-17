@@ -89,7 +89,10 @@ le texte d'une balise *img* doit correspondre à un fichier existant et, une foi
 
 aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
-il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant, une section non vide doit avoir un premier champ non vide et une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.
+il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant :
+- une section (quelconque non vide) doit avoir un premier champ non vide.
+- une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.
+- une section de type `ms` doit avoir au moins ses champs `Anglais` et `Français` non vides.
 
 il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
 
@@ -117,6 +120,8 @@ le nombre de champs encodé doit toujours être respecté (même si le nombre de
 si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
 `<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf si utilisés dans les balises définies, où ils sont alors encodés tels quels).
+
+un `//` encadrant un texte phonétique doit être encodé par `/`.
 
 ## pour toutes les sections sauf `ms`
 

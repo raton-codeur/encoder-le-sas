@@ -3,10 +3,10 @@
 sas_path = "./sas.txt"
 # /Users/quentinhauuy/Documents/apprendre/sas_anki/sas.txt
 
-images_src_path = "./images_src"
+images_src_dir = "./images_src"
 # /Users/quentinhauuy/Downloads
 
-images_dest_path = "./images_dest"
+images_dest_dir = "./images_dest"
 # "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
 
 output_dir = "./output"

@@ -6,17 +6,14 @@ import shutil
 from config import *
 from send2trash import send2trash
 
+# sas = None
+# with open(sas_path, "r") as f :
+# 	sas = f.read().splitlines()
 
-file_names = {
-    "c1" : "1 - 1",
-    "c2" : "2 - 2",
-    "c3" : "1 - 3",
-    "t1" : "3 - 1",
-    "t2" : "4 - 2",
-    "t3" : "3 - 3",
-    "ms" : "mosalingua"
-}
-
+# num_line = 1
+# for line in sas :
+# 	print(num_line, line)
+# 	num_line += 1
 
 def get_sas() :
     """ renvoie le contenu trimé du sas """
@@ -40,9 +37,9 @@ formats = {
     "sub": r"<sub>([\s\S]*?)</sub>",
     "b": r"<b>([\s\S]*?)</b>",
     "trou" : r"\{\{c\d+::([\s\S]*?)(?:::([\s\S]*?))?\}\}", # ["champ principal", "champ d'indice"]
-    "trou complet" : r"\{\{c(\d+)::([\s\S]*?)(::([\s\S]*?))?\}\}" # ["numéro", "champ principal", "vide si pas d'indice", "champ d'indice"]
+    "trou complet" : r"\{\{c(\d+)::([\s\S]*?)(::([\s\S]*?))?\}\}", # ["numéro", "champ principal", "vide si pas d'indice", "champ d'indice"]
+    "phonetique" : r'(?<!\\)//([\s\S]*?)(?<!\\)//'
 }
-
 
 def starts_with_separator() :
     return sas.startswith(('---', '--', '-)', '-'))
@@ -51,7 +48,7 @@ if not starts_with_separator() :
     exit("erreur : le sas ne commence pas par un séparateur")
 
 def trim_format() :
-    """ trim les balises et les trous """
+    """ trim les balises, les trous, la phonétique """
     global sas
     for i in re.findall(formats["img"], sas) :
         sas = sas.replace(f"<img src=\"{i}\" />", f"<img src=\"{i.strip()}\" />")
@@ -65,6 +62,8 @@ def trim_format() :
         sas = sas.replace(f"<b>{i}</b>", f"<b>{i.strip()}</b>")
     for a, b, c, d in re.findall(formats["trou complet"], sas) :
         sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
+    for i in re.findall(formats["phonetique"], sas) :
+        sas = sas.replace(f"//{i}//", f"//{i.strip()}//")
 trim_format()
 
 def get_first_separator() :
@@ -107,7 +106,6 @@ def delete_echap_at_beginning() :
             sections[i] = re.sub(r"\n\\(---|--|-|\)-)", r"\n\1", sections[i])
 delete_echap_at_beginning()
 
-
 def get_t(sections) :
     """ renvoie la liste des sections de "sections" qui contiennent un trou """
     result = []
@@ -138,8 +136,6 @@ def print_sas() :
             print(f"--- {type} ({len(sections)}) ---")
             print(sections)
 
-
-
 def get_split(sections, nb_fields) :
     """ renvoie le split de "sections" en champs """
     for i in range(len(sections)) :
@@ -154,7 +150,7 @@ def get_split(sections, nb_fields) :
     return sections
 
 def split_fields() :
-    """split les champs des sections"""    
+    """split les champs des sections"""
     global sas
     for sections in sas["c1"], sas["c3"], sas["t1"], sas["t2"], sas["t3"] : # les sections qui ont 2 champs
         sections = get_split(sections, 2)
@@ -213,12 +209,12 @@ check_c2()
 def check_ms_fields() :
     """ vérifie que les sections ms ont 2 champs non vides """
     for section in sas["ms"] :
-        if section[0] == '' or section[2] == '' :
-            exit(f"erreur : champ vide dans une carte ms :\n{section}")
+        if section[2] == '' :
+            exit(f"erreur : champ vide pour le Français dans une carte ms :\n{section}")
 check_ms_fields()
 
-def check_imgs() :
-    """ check si les images mentionnées dans le sas sont bien dans le dossier images_src """
+def do_imgs() :
+    """ vérifie que les images existent et les déplace de images_src à images_dest. """
     for sections in sas.values() :
         for section in sections :
             for field in section :
@@ -226,95 +222,94 @@ def check_imgs() :
                 for name in names :
                     if not name :
                         exit(f"erreur : image vide dans la section :\n{section}")
-                    elif not os.path.exists(os.path.join(images_src, name)) :
-                        exit(f"erreur : image {name} non trouvée dans le dossier {images_src}. section :\n{section}")
-check_imgs()
+                    elif not os.path.exists(os.path.join(images_src_dir, name)) and not os.path.exists(os.path.join(images_dest_dir, name)) :
+                        exit(f"erreur : image {name} non trouvée dans le dossier {images_src_dir} ni dans le dossier {images_dest_dir}. section :\n{section}")
+                    elif os.path.exists(os.path.join(images_src_dir, name)) :
+                        shutil.move(os.path.join(images_src_dir, name), os.path.join(images_dest_dir, name))
+do_imgs()
 
-def move_imgs_and_clean_images_src() :
-    """ déplace les images du dossier images_src vers le dossier images_dest et supprime le reste des images de images_src """
-    for sections in sas.values() :
-        for section in sections :
-            for field in section :
-                names = re.findall(formats["img"], field)
-                for name in names :
-                    shutil.move(os.path.join(images_src, name), os.path.join(images_dest, name))
-    fichiers = os.listdir(images_src)
-    for fichier in fichiers :
-        send2trash(os.path.join(images_src, fichier))
-move_imgs_and_clean_images_src()
+# def get_empty_ms() :
+#     """ remplace les champs vides de type ms par <p></p> """
+#     global sas
+#     for section in sas["ms"] :
+#         for i in range(len(section)) :
+#             if section[i] == '' :
+#                 section[i] = "<p></p>"
+# get_empty_ms()
 
-def get_empty_ms() :
-    """ remplace les champs vides de type ms par <p></p> """
-    global sas
-    for section in sas["ms"] :
-        for i in range(len(section)) :
-            if section[i] == '' :
-                section[i] = "<p></p>"
-get_empty_ms()
+# def encode_new_line() :
+#     """ encode les \n par <br /> """
+#     global sas
+#     for type, sections in sas.items() :
+#         for section in sections :
+#             for i in range(len(section)) :
+#                 section[i] = section[i].replace("\n", "<br />")
+# encode_new_line()
 
-def encode_new_line() :
-    """ encode les \n par <br /> """
-    global sas
-    for type, sections in sas.items() :
-        for section in sections :
-            for i in range(len(section)) :
-                section[i] = section[i].replace("\n", "<br />")
-encode_new_line()
+# def first_quote() :
+#     """encode le premier caractere \" dun champ par &quot;"""
+#     global sas
+#     for sections in sas.values() :
+#         for section in sections :
+#             for i in range(len(section)) :
+#                 if section[i].startswith('"') :
+#                     section[i] = "&quot;" + section[i][1:]
+# first_quote()
 
-def first_quote() :
-    """encode le premier caractere \" dun champ par &quot;"""
-    global sas
-    for sections in sas.values() :
-        for section in sections :
-            for i in range(len(section)) :
-                if section[i].startswith('"') :
-                    section[i] = "&quot;" + section[i][1:]
-first_quote()
-
-# si le sas est vide
-if not any(sas.values()) :
-    exit("sas vide")
+# # si le sas est vide
+# if not any(sas.values()) :
+#     exit("sas vide")
 
 print_sas()
 
-def write_sections(section_name, nb_fields, end_field, end_section) :
-    if sas[section_name] :
-        with open(os.path.join(output_dir, f"{file_names[section_name]}.txt"), "w") as f :
-            if section_name == "ms" :
-                f.write("-\n")            
-            for section in sas[section_name] :
-                for i in range(nb_fields - 1) :
-                    f.write(section[i] + end_field)
-                f.write(section[nb_fields - 1] + end_section)
+# file_names = {
+#     "c1" : "1 - 1",
+#     "c2" : "2 - 2",
+#     "c3" : "1 - 3",
+#     "t1" : "3 - 1",
+#     "t2" : "4 - 2",
+#     "t3" : "3 - 3",
+#     "ms" : "mosalingua"
+# }
 
-# création des fichiers.
-def create_files() :
-    write_sections("c1", 2, "\t", "\n")
-    write_sections("c2", 3, "\t", "\n")
-    write_sections("c3", 2, "\t", "\n")
-    write_sections("t1", 2, "\t", "\n")
-    write_sections("t2", 2, "\t", "\n")
-    write_sections("t3", 2, "\t", "\n")
-    write_sections("ms", 4, "\n", "\n-\n")
-create_files()
+# def write_sections(section_name, nb_fields, end_field, end_section) :
+#     if sas[section_name] :
+#         with open(os.path.join(output_dir, f"{file_names[section_name]}.txt"), "w") as f :
+#             if section_name == "ms" :
+#                 f.write("-\n")            
+#             for section in sas[section_name] :
+#                 for i in range(nb_fields - 1) :
+#                     f.write(section[i] + end_field)
+#                 f.write(section[nb_fields - 1] + end_section)
 
-
-
-# # mise à jour de la poubelle
-
-# # os.remove(os.path.join(trash_dir, "9.txt"))
-# # for i in range(8, -1, -1) :
-# #     os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
-# # shutil.copy(sas_path, f"{trash_dir}/0.txt")
-# # with open(sas_path, "w") as f :
-# #     f.write("-\n")
-
-# # print(f"log : {trash_dir}/0.txt")
+# # création des fichiers.
+# def create_files() :
+#     write_sections("c1", 2, "\t", "\n")
+#     write_sections("c2", 3, "\t", "\n")
+#     write_sections("c3", 2, "\t", "\n")
+#     write_sections("t1", 2, "\t", "\n")
+#     write_sections("t2", 2, "\t", "\n")
+#     write_sections("t3", 2, "\t", "\n")
+#     write_sections("ms", 4, "\n", "\n-\n")
+# create_files()
 
 
-# def check_img_src() :
-#     """ verifier les noms des img """
-#     for content in re.findall(formats["img"], sas) :
-#         if re.search(r'[^\w\s\-\(\)\.]', content) :
-#             exit(f"erreur : nom d'image interdit : {content}")
-# check_img_src()
+
+# # # mise à jour de la poubelle
+
+# # # os.remove(os.path.join(trash_dir, "9.txt"))
+# # # for i in range(8, -1, -1) :
+# # #     os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
+# # # shutil.copy(sas_path, f"{trash_dir}/0.txt")
+# # # with open(sas_path, "w") as f :
+# # #     f.write("-\n")
+
+# # # print(f"log : {trash_dir}/0.txt")
+
+
+# # def check_img_src() :
+# #     """ verifier les noms des img """
+# #     for content in re.findall(formats["img"], sas) :
+# #         if re.search(r'[^\w\s\-\(\)\.]', content) :
+# #             exit(f"erreur : nom d'image interdit : {content}")
+# # check_img_src()
