@@ -70,7 +70,7 @@ une **image_path** est une chaîne de caractères représentant un chemin vers u
 
 on veut vérifier qu'il n'y a pas d'erreur dans le sas. sinon, on doit pouvoir remonter facilement à la source de l'erreur.
 
-on veut ensuite **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
+ensuite, on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
 - `1 - 1.txt` pour les sections `c1`
@@ -80,8 +80,6 @@ chaque fichier produit doit correspondre à un type de section :
 - `4 - 2.txt` pour les sections `t2`
 - `3 - 3.txt` pour les sections `t3`
 - `mosalingua.txt` pour les sections `ms`
-
-on veut aussi vérifier que les image_paths existent et les déplacer.
 
 enfin, on veut réinitialiser le sas et supprimer les fichiers créés. on veut garder une copie des 10 derniers sas traités.
 
@@ -97,7 +95,7 @@ il ne doit pas y avoir plus de changements de champ que ce qui est possible dans
 
 # règles d'encodage
 
-# échappement
+## échappement
 
 si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. c'est la même logique pour les autres séparateurs.
 
