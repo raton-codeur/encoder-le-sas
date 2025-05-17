@@ -17,7 +17,7 @@ il y a 4 **types** de flashcards Anki :
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
 
-il y a 6 possibilités de flashcards Anki correspondant à 6 **sections** différentes possibles :
+il y a 6 combinaisons de type et de paquet correspondant à 6 **sections** différentes possibles :
 - `c1` pour type 1 et paquet 1
 - `c2` pour type 2 et paquet 2
 - `c3` pour type 1 et paquet 3
