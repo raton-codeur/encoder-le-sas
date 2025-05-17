@@ -66,6 +66,13 @@ def trim_format() :
         sas = sas.replace(f"//{i}//", f"//{i.strip()}//")
 trim_format()
 
+def delete_echap_phonetique() :
+    """ supprime les échappements pour la phonétique """
+    global sas
+    sas = sas.replace("\\//", "//")
+
+delete_echap_phonetique()
+
 def get_first_separator() :
     for sep in '---', '--', '-)', '-' :
         if sas.startswith(sep) :
@@ -103,7 +110,7 @@ def delete_echap_at_beginning() :
     global sas
     for sections in sas.values() :
         for i in range(len(sections)) :
-            sections[i] = re.sub(r"\n\\(---|--|-|\)-)", r"\n\1", sections[i])
+            sections[i] = re.sub(r"\n\\(---|--|-\)|-)", r"\n\1", sections[i])
 delete_echap_at_beginning()
 
 def get_t(sections) :
@@ -213,38 +220,45 @@ def check_ms_fields() :
             exit(f"erreur : champ vide pour le Français dans une carte ms :\n{section}")
 check_ms_fields()
 
+def img_name_is_not_ok(name):
+    motif = rf"^[\w \-\(\)\.]+$"
+    return not re.fullmatch(motif, name, flags=re.ASCII)
+
 def do_imgs() :
-    """ vérifie que les images existent et les déplace de images_src à images_dest. """
+    """ vérifie que les images existent, ont un nom correct et les déplace de images_src à images_dest. """
     for sections in sas.values() :
         for section in sections :
             for field in section :
                 names = re.findall(formats["img"], field)
                 for name in names :
+
                     if not name :
                         exit(f"erreur : image vide dans la section :\n{section}")
+                    elif img_name_is_not_ok(name) :
+                        exit(f"erreur : nom d'image interdit dans la section :\n{section}\nautorisés : lettres chiffres _ ' ' - ( ) .")
                     elif not os.path.exists(os.path.join(images_src_dir, name)) and not os.path.exists(os.path.join(images_dest_dir, name)) :
-                        exit(f"erreur : image {name} non trouvée dans le dossier {images_src_dir} ni dans le dossier {images_dest_dir}. section :\n{section}")
+                        exit(f"erreur : l'image {name} n'a pas été trouvée (ni dans le dossier {images_src_dir} ni dans le dossier {images_dest_dir}). section :\n{section}")
                     elif os.path.exists(os.path.join(images_src_dir, name)) :
                         shutil.move(os.path.join(images_src_dir, name), os.path.join(images_dest_dir, name))
 do_imgs()
 
-# def get_empty_ms() :
-#     """ remplace les champs vides de type ms par <p></p> """
-#     global sas
-#     for section in sas["ms"] :
-#         for i in range(len(section)) :
-#             if section[i] == '' :
-#                 section[i] = "<p></p>"
-# get_empty_ms()
+def get_empty_ms() :
+    """ remplace les champs vides de type ms par <p></p> """
+    global sas
+    for section in sas["ms"] :
+        for i in range(len(section)) :
+            if section[i] == '' :
+                section[i] = "<p></p>"
+get_empty_ms()
 
-# def encode_new_line() :
-#     """ encode les \n par <br /> """
-#     global sas
-#     for type, sections in sas.items() :
-#         for section in sections :
-#             for i in range(len(section)) :
-#                 section[i] = section[i].replace("\n", "<br />")
-# encode_new_line()
+def encode_new_line() :
+    """ encode les \n par <br /> """
+    global sas
+    for type, sections in sas.items() :
+        for section in sections :
+            for i in range(len(section)) :
+                section[i] = section[i].replace("\n", "<br />")
+encode_new_line()
 
 # def first_quote() :
 #     """encode le premier caractere \" dun champ par &quot;"""
