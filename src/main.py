@@ -6,14 +6,11 @@ import shutil
 from config import *
 from send2trash import send2trash
 
-# sas = None
-# with open(sas_path, "r") as f :
-# 	sas = f.read().splitlines()
-
-# num_line = 1
-# for line in sas :
-# 	print(num_line, line)
-# 	num_line += 1
+def rm_output_dir() :
+    """ supprime le dossier d'output précédent """
+    if os.path.exists(output_dir) :
+        send2trash(output_dir)
+rm_output_dir()
 
 def get_sas() :
     """ renvoie le contenu trimé du sas """
@@ -48,30 +45,41 @@ if not starts_with_separator() :
     exit("erreur : le sas ne commence pas par un séparateur")
 
 def trim_format() :
-    """ trim les balises, les trous, la phonétique """
+    """ trim les balises, les trous, la phonétique.
+    les // de phonétique sont remplacés par /
+    les chevrons de balises sont temporairement remplacés par une autre string
+    """
     global sas
     for i in re.findall(formats["img"], sas) :
-        sas = sas.replace(f"<img src=\"{i}\" />", f"<img src=\"{i.strip()}\" />")
+        sas = sas.replace(f"<img src=\"{i}\" />", f"BROKET_LEFTimg src=\"{i.strip()}\" /BROKET_RIGHT")
     for i in re.findall(formats["span"], sas) :
-        sas = sas.replace(f"<span style=\"color:red;\">{i}</span>", f"<span style=\"color:red;\">{i.strip()}</span>")
+        sas = sas.replace(f"<span style=\"color:red;\">{i}</span>", f"BROKET_LEFTspan style=\"color:red;\"BROKET_RIGHT{i.strip()}BROKET_LEFT/spanBROKET_RIGHT")
     for i in re.findall(formats["sup"], sas) :
-        sas = sas.replace(f"<sup>{i}</sup>", f"<sup>{i.strip()}</sup>")
+        sas = sas.replace(f"<sup>{i}</sup>", f"BROKET_LEFTsupBROKET_RIGHT{i.strip()}BROKET_LEFT/supBROKET_RIGHT")
     for i in re.findall(formats["sub"], sas) :
-        sas = sas.replace(f"<sub>{i}</sub>", f"<sub>{i.strip()}</sub>")
+        sas = sas.replace(f"<sub>{i}</sub>", f"BROKET_LEFTsubBROKET_RIGHT{i.strip()}BROKET_LEFT/subBROKET_RIGHT")
     for i in re.findall(formats["b"], sas) :
-        sas = sas.replace(f"<b>{i}</b>", f"<b>{i.strip()}</b>")
+        sas = sas.replace(f"<b>{i}</b>", f"BROKET_LEFTbBROKET_RIGHT{i.strip()}BROKET_LEFT/bBROKET_RIGHT")
     for a, b, c, d in re.findall(formats["trou complet"], sas) :
         sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
     for i in re.findall(formats["phonetique"], sas) :
-        sas = sas.replace(f"//{i}//", f"//{i.strip()}//")
+        sas = sas.replace(f"//{i}//", f"/{i.strip()}/")
 trim_format()
 
 def delete_echap_phonetique() :
-    """ supprime les échappements pour la phonétique """
+    """ supprime l'échappement des \// """
     global sas
     sas = sas.replace("\\//", "//")
-
 delete_echap_phonetique()
+
+def replace_chevrons() :
+    """ remplace les chevrons et les chevrons temporaires """
+    global sas
+    sas = sas.replace("<", "&lt;")
+    sas = sas.replace(">", "&gt;")
+    sas = sas.replace("BROKET_LEFT", "<")
+    sas = sas.replace("BROKET_RIGHT", ">")
+replace_chevrons()
 
 def get_first_separator() :
     for sep in '---', '--', '-)', '-' :
@@ -110,7 +118,8 @@ def delete_echap_at_beginning() :
     global sas
     for sections in sas.values() :
         for i in range(len(sections)) :
-            sections[i] = re.sub(r"\n\\(---|--|-\)|-)", r"\n\1", sections[i])
+            sections[i] = re.sub(r"\n\\(---|--|-\)|-)(?!\\)", r"\n\1", sections[i])
+            sections[i] = re.sub(r"\n\\\\(---|--|-\)|-)", r"\n\\\1", sections[i])
 delete_echap_at_beginning()
 
 def get_t(sections) :
@@ -260,70 +269,69 @@ def encode_new_line() :
                 section[i] = section[i].replace("\n", "<br />")
 encode_new_line()
 
-# def first_quote() :
-#     """encode le premier caractere \" dun champ par &quot;"""
-#     global sas
-#     for sections in sas.values() :
-#         for section in sections :
-#             for i in range(len(section)) :
-#                 if section[i].startswith('"') :
-#                     section[i] = "&quot;" + section[i][1:]
-# first_quote()
+def first_quote() :
+    """encode le premier caractere \" dun champ par &quot;"""
+    global sas
+    for sections in sas.values() :
+        for section in sections :
+            for i in range(len(section)) :
+                if section[i].startswith('"') :
+                    section[i] = "&quot;" + section[i][1:]
+first_quote()
 
-# # si le sas est vide
-# if not any(sas.values()) :
-#     exit("sas vide")
+# si le sas est vide
+if not any(sas.values()) :
+    exit("sas vide")
 
 print_sas()
 
-# file_names = {
-#     "c1" : "1 - 1",
-#     "c2" : "2 - 2",
-#     "c3" : "1 - 3",
-#     "t1" : "3 - 1",
-#     "t2" : "4 - 2",
-#     "t3" : "3 - 3",
-#     "ms" : "mosalingua"
-# }
+file_names = {
+    "c1" : "1 - 1",
+    "c2" : "2 - 2",
+    "c3" : "1 - 3",
+    "t1" : "3 - 1",
+    "t2" : "4 - 2",
+    "t3" : "3 - 3",
+    "ms" : "mosalingua"
+}
 
-# def write_sections(section_name, nb_fields, end_field, end_section) :
-#     if sas[section_name] :
-#         with open(os.path.join(output_dir, f"{file_names[section_name]}.txt"), "w") as f :
-#             if section_name == "ms" :
-#                 f.write("-\n")            
-#             for section in sas[section_name] :
-#                 for i in range(nb_fields - 1) :
-#                     f.write(section[i] + end_field)
-#                 f.write(section[nb_fields - 1] + end_section)
+def write_sections(section_name, nb_fields, end_field, end_section) :
+    if sas[section_name] :
+        if not os.path.exists(output_dir) :
+            os.makedirs(output_dir)
+        with open(os.path.join(output_dir, f"{file_names[section_name]}.txt"), "w") as f :
+            if section_name == "ms" :
+                f.write("-\n")            
+            for section in sas[section_name] :
+                for i in range(nb_fields - 1) :
+                    f.write(section[i] + end_field)
+                f.write(section[nb_fields - 1] + end_section)
 
-# # création des fichiers.
-# def create_files() :
-#     write_sections("c1", 2, "\t", "\n")
-#     write_sections("c2", 3, "\t", "\n")
-#     write_sections("c3", 2, "\t", "\n")
-#     write_sections("t1", 2, "\t", "\n")
-#     write_sections("t2", 2, "\t", "\n")
-#     write_sections("t3", 2, "\t", "\n")
-#     write_sections("ms", 4, "\n", "\n-\n")
-# create_files()
+# création des fichiers.
+def create_files() :
+    write_sections("c1", 2, "\t", "\n")
+    write_sections("c2", 3, "\t", "\n")
+    write_sections("c3", 2, "\t", "\n")
+    write_sections("t1", 2, "\t", "\n")
+    write_sections("t2", 2, "\t", "\n")
+    write_sections("t3", 2, "\t", "\n")
+    write_sections("ms", 4, "\n", "\n-\n")
+create_files()
 
+def edit_logs() :
+    """ met à jour les logs et le sas """
+    
+    log_9_path = os.path.join(log_dir, "9.txt")
+    if os.path.exists(log_9_path) :
+        send2trash(log_9_path)
+    for i in range(8, -1, -1) :
+        src = os.path.join(log_dir, f"{i}.txt")
+        dst = os.path.join(log_dir, f"{i + 1}.txt")
+        if os.path.exists(src):
+            os.rename(src, dst)
 
+    shutil.copy(sas_path, f"{log_dir}/0.txt")
+    with open(sas_path, "w") as f :
+        f.write("-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+edit_logs()
 
-# # # mise à jour de la poubelle
-
-# # # os.remove(os.path.join(trash_dir, "9.txt"))
-# # # for i in range(8, -1, -1) :
-# # #     os.rename(os.path.join(trash_dir, f"{i}.txt"), os.path.join(trash_dir, f"{i + 1}.txt"))
-# # # shutil.copy(sas_path, f"{trash_dir}/0.txt")
-# # # with open(sas_path, "w") as f :
-# # #     f.write("-\n")
-
-# # # print(f"log : {trash_dir}/0.txt")
-
-
-# # def check_img_src() :
-# #     """ verifier les noms des img """
-# #     for content in re.findall(formats["img"], sas) :
-# #         if re.search(r'[^\w\s\-\(\)\.]', content) :
-# #             exit(f"erreur : nom d'image interdit : {content}")
-# # check_img_src()
