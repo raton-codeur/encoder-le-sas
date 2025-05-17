@@ -17,7 +17,7 @@ il y a 4 **types** de flashcards Anki :
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
 
-il y a 6 combinaisons de type et de paquet correspondant à 6 **sections** différentes possibles :
+il y a 6 combinaisons de paquet et de type correspondant à 6 **sections** différentes possibles :
 - `c1` pour type 1 et paquet 1
 - `c2` pour type 2 et paquet 2
 - `c3` pour type 1 et paquet 3
@@ -27,6 +27,8 @@ il y a 6 combinaisons de type et de paquet correspondant à 6 **sections** diff�
 
 il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais :) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
+
+un **changement de champ** au sein d'une section est indiqué par `@`.
 
 un **séparateur** peut être :
 - `\n-` pour le paquet 1
@@ -44,11 +46,11 @@ cependant, une section de type `t` comporte au moins un **trou**. c'est ce qui l
 
 un **trou** est une chaîne de caractères de la forme `{{c` + [ un nombre ] + `::` + [ un texte ] (+ `::` + [ un texte ]) + `}}`.
 
-un **changement de champ** au sein d'une section est indiqué par `@`.
+une **insertion de prononciation** est chaîne de caractères de la forme : `//` + [ un texte ] + `//`.
 
 un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
 
-**trimer** un texte signifie lui retirer ses caractères blancs aux extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
+**trimer** un texte signifie supprimer tous les caractères blancs de ses extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
 
 un champ, ou plus généralement un texte, est **vide** s'il ne contient que des caractères blancs. une section est vide si tous ses champs sont vides.
 
@@ -62,13 +64,13 @@ les **balises** peuvent être :
 
 un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
-une **image** est un texte représentant un chemin vers un fichier.
+une **image_path** est une chaine de caractères représentant un chemin vers un fichier.
 
 # ce qu'on veut faire
 
 on veut vérifier qu'il n'y a pas d'erreur dans le sas. sinon, on doit pouvoir remonter facilement à la source de l'erreur.
 
-on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
+on veut ensuite **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
 chaque fichier produit doit correspondre à un type de section :
 - `1 - 1.txt` pour les sections `c1`
@@ -79,13 +81,13 @@ chaque fichier produit doit correspondre à un type de section :
 - `3 - 3.txt` pour les sections `t3`
 - `mosalingua.txt` pour les sections `ms`
 
-on veut aussi vérifier que les images citées dans le sas existent et les déplacer dans un nouveau dossier.
+on veut aussi vérifier que les image_paths existent et les déplacer.
 
 enfin, on veut réinitialiser le sas et supprimer les fichiers créés. on veut garder une copie des 10 derniers sas traités.
 
 # ce qu'il faut vérifier dans le sas
 
-le texte de l'attribut *src* d'une balise *img* doit correspondre à un fichier existant et, une fois trimé, il ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
+le texte d'une balise *img* doit correspondre à un fichier existant et, une fois trimé, il ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
 
 aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
