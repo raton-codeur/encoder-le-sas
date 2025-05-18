@@ -17,7 +17,7 @@ il y a 4 **types** de flashcards Anki :
 - `3 - trou` composé des champs `Texte` et `Extra`
 - `4 - trou à taper` composé des champs `Texte` et `Extra`
 
-il y a 6 combinaisons de paquet et de type correspondant à 6 **sections** différentes possibles :
+il y a 6 combinaisons de [ paquet et type ] correspondant à 6 **sections** différentes possibles :
 - `c1` pour type 1 et paquet 1
 - `c2` pour type 2 et paquet 2
 - `c3` pour type 1 et paquet 3
@@ -25,7 +25,7 @@ il y a 6 combinaisons de paquet et de type correspondant à 6 **sections** diff�
 - `t2` pour type 4 et paquet 2
 - `t3` pour type 3 et paquet 3
 
-il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais :) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
+il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
 un **changement de champ** au sein d'une section est indiqué par `@`.
@@ -46,7 +46,7 @@ cependant, une section de type `t` comporte au moins un **trou**. c'est ce qui l
 
 un **trou** est une chaîne de caractères de la forme `{{c` + [ un nombre ] + `::` + [ un texte ] (+ `::` + [ un texte ]) + `}}`.
 
-une **insertion de prononciation** est chaîne de caractères de la forme : `//` + [ un **texte phonétique** ] + `//`.
+une **insertion de prononciation** est chaîne de caractères de la forme : `//` + [ un **texte (phonétique)** ] + `//`.
 
 un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
 
@@ -68,7 +68,7 @@ une **image_path** est une chaîne de caractères représentant un chemin vers u
 
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas. sinon, on doit pouvoir remonter facilement à la source de l'erreur.
+on veut vérifier qu'il n'y a pas d'erreur dans le sas. s'il y en a, on veut essayer d'afficher une erreur précise.
 
 ensuite, on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
