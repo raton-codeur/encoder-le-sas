@@ -116,9 +116,9 @@ les lignes doivent être trimées de leurs espaces (et tabulations). par exemple
 
 les retours à la ligne doivent être encodés par `<br />`.
 
-le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
+le nombre de champs encodé doit toujours être respecté (même si le nombre de `@` ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
-si un champ trimé commence par `"`, alors ce caractère doit être encodé par `&quot;`.
+si un champ (trimé) commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
 `<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf si utilisés dans les balises définies, où ils sont alors encodés tels quels).
 
