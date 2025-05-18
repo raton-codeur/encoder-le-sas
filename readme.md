@@ -72,7 +72,7 @@ on veut vérifier qu'il n'y a pas d'erreur dans le sas. s'il y en a, on veut ess
 
 ensuite, on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
-chaque fichier produit doit correspondre à un type de section :
+chaque fichier produit doit correspondre à une section :
 - `1 - 1.txt` pour les sections `c1`
 - `2 - 2.txt` pour les sections `c2`
 - `1 - 3.txt` pour les sections `c3`
@@ -81,7 +81,7 @@ chaque fichier produit doit correspondre à un type de section :
 - `3 - 3.txt` pour les sections `t3`
 - `mosalingua.txt` pour les sections `ms`
 
-enfin, on veut réinitialiser le sas et supprimer les fichiers créés. on veut garder une copie des 10 derniers sas traités.
+enfin, on veut réinitialiser le sas et garder une copie des 10 derniers sas traités.
 
 # ce qu'il faut vérifier dans le sas
 
@@ -108,10 +108,11 @@ si on veut utiliser `//` sans insérer de prononciation, on doit utiliser `\//`.
 
 ## pour toutes les sections
 
-les tabulations doivent être encodées par 4 espaces.
+tout d'abord, les tabulations doivent être remplacées par 4 espaces.
 
 les champs, les textes de balises, les textes phonétiques et les textes de trou doivent être trimés.
-les lignes doivent être trimées de leurs espaces (et tabulations). par exemple, `\n a` doit devenir `\na`.
+
+les lignes doivent être trimées de leurs espaces (et tabulations). par exemple, `\n a` doit être vu comme `\na`.
 
 les retours à la ligne doivent être encodés par `<br />`.
 
