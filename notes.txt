@@ -1,0 +1,8 @@
+
+
+-
+retrouver le numéro de ligne d'une erreur
+
+
+init le sas en numérotant chaque ligne
+\na -> \nxxxa avec xxx un numéro de ligne dans le sas
