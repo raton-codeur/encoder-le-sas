@@ -6,17 +6,31 @@ import shutil
 from config import *
 from send2trash import send2trash
 
-def rm_output_dir() :
-    """ supprime le dossier d'output précédent """
-    if os.path.exists(output_dir) :
-        send2trash(output_dir)
-rm_output_dir()
+# les variables de configuration
+sas_path = "./sas.txt"
+images_src_dir = "/Users/quentinhauuy/Downloads"
+images_dest_dir = "/Users/quentinhauuy/Library/Application Support/Anki2/Quentin/collection.media"
+output_dir = "./out"
+log_dir = "./log"
 
-def get_sas() :
-    """ renvoie le contenu trimé du sas """
-    with open(sas_path, "r") as f :
-        return f.read().strip()
-sas = get_sas()
+# vérifier les variables de configuration
+if not os.path.exists(sas_path) :
+    exit(f"erreur : le fichier du sas ({sas_path}) n'existe pas")
+if not os.path.exists(images_src_dir) :
+    exit(f"erreur : le dossier source des images ({images_src_dir}) n'existe pas")
+if not os.path.exists(images_dest_dir) :
+    exit(f"erreur : le dossier de destination des images ({images_dest_dir}) n'existe pas")
+if not os.path.exists(log_dir) :
+    exit(f"erreur : le dossier des logs ({log_dir}) n'existe pas")
+
+# supprimer le dossier d'output précédent
+if os.path.exists(output_dir) :
+    send2trash(output_dir)
+
+# init la variable sas avec le contenu trimé du fichier
+sas = None
+with open(sas_path, "r") as f :
+    sas = f.read().strip()
 
 sas = sas.replace("\t", "    ")
 
