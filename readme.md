@@ -68,7 +68,7 @@ une **image_path** est une chaîne de caractères représentant un chemin vers u
 
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans le sas. s'il y en a, on veut essayer d'afficher une erreur précise.
+on veut vérifier qu'il n'y a pas d'erreur dans les arguments et dans le sas. s'il y en a une, on veut l'afficher assez précisément.
 
 ensuite, on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
 
@@ -82,6 +82,16 @@ chaque fichier produit doit correspondre à une section :
 - `mosalingua.txt` pour les sections `ms`
 
 enfin, on veut réinitialiser le sas et garder une copie des 10 derniers sas traités.
+
+les images mentionnées dans le sas doivent être déplacées dans un autre dossier.
+
+# les arguments
+
+- **sas_path** : le chemin vers le fichier du sas.
+- **images_src_dir** : le chemin vers le dossier source des images.
+- **images_dst_dir** : le chemin vers le dossier de destination des images.
+- **output_dir** : le chemin vers le dossier où seront produits les fichiers.
+- **log_dir** : le chemin vers le dossier de sauvegarde des sas traités.
 
 # ce qu'il faut vérifier dans le sas
 
@@ -108,7 +118,7 @@ si on veut utiliser `//` sans insérer de prononciation, on doit utiliser `\//`.
 
 ## pour toutes les sections
 
-tout d'abord, les tabulations doivent être remplacées par 4 espaces.
+les tabulations doivent être remplacées par 4 espaces.
 
 les champs, les textes de balises, les textes phonétiques et les textes de trou doivent être trimés.
 
