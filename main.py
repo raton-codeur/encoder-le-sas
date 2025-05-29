@@ -145,7 +145,7 @@ for type in "c1", "c3", "t1", "t2", "t3" : # les sections qui ont 2 champs
 sas["c2"] = get_split(sas["c2"], "c2", 3)
 sas["ms"] = get_split(sas["ms"], "ms", 4)
 
-# les sections sont maintenant divisées en champs
+# une section est maintenant une liste de champs
 
 # vérifier les premiers champs
 for type, sections in sas.items() :
