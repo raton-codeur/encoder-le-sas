@@ -67,11 +67,6 @@ for type, sections in sas.items() :
 
     
 
-# vérifier les premiers champs
-for type, sections in sas.items() :
-    for section in sections :
-        if not section[0] :
-            exit(f"erreur : premier champ vide dans une section de type {type} :\n{section}")
 
 # vérifier les deuxièmes champs des types c2
 for section in sas["c2"] :

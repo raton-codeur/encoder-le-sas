@@ -95,7 +95,7 @@ les images mentionnées dans le sas doivent être déplacées dans un autre doss
 
 # ce qu'il faut vérifier dans le sas
 
-le texte d'une balise *img* doit correspondre à un fichier existant et, une fois trimé, il ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
+le texte d'une balise *img* doit correspondre à un fichier existant dans images_src_dir ou images_dst_dir et, une fois trimé, il ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
 
 aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
@@ -105,6 +105,8 @@ il n'est pas nécessaire que tous les champs soient non vides ni même spécifi�
 - une section de type `ms` doit avoir au moins ses champs `Anglais` et `Français` non vides.
 
 il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
+
+il ne doit pas y avoir de balise *img* dans une section de type `ms`.
 
 # règles d'encodage
 
