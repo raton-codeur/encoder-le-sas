@@ -28,6 +28,8 @@ il y a 6 combinaisons de [ paquet et type ] correspondant à 6 **sections** diff
 il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
+un changement de champ est indiqué par le caractère *@*.
+
 un **séparateur** peut être :
 - `\n-` pour le paquet 1
 - `\n--` pour le paquet 2
@@ -44,15 +46,15 @@ cependant, une section de type `t` comporte au moins un **trou**. c'est ce qui l
 
 un **trou** est une chaîne de caractères de la forme `{{c` + [ un nombre ] + `::` + [ un texte ] (+ `::` + [ un texte ]) + `}}`.
 
-une **insertion de prononciation** est chaîne de caractères de la forme : `//` + [ un **texte (phonétique)** ] + `//`.
+une **insertion de prononciation** est chaîne de caractères de la forme `//` + [ un **texte (phonétique)** ] + `//`.
 
 un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
 
-**trimer** un texte signifie supprimer tous les caractères blancs de ses extrémités. on dit qu'on *trim* le texte et qu'il est *trimé*.
+**trimer** un texte signifie supprimer tous les caractères blancs de ses extrémités. on dit qu'on **trim** le texte et qu'il est **trimé**.
 
-un champ, ou plus généralement un texte, est **vide** s'il ne contient que des caractères blancs. une section est vide si tous ses champs sont vides.
+un champ ou un texte est **vide** s'il ne contient que des caractères blancs. à l'inverse, il est **rempli**. une section est vide si tous ses champs sont vides.
 
-les **balises** peuvent être :
+les **balises** du sas :
 
 - `<img src="" />`
 - `<span style="color:red;">` et `</span>`
@@ -64,13 +66,19 @@ un **texte de balise** fait référence au contenu de l'attribut *src* de la bal
 
 une **image_path** est une chaîne de caractères représentant un chemin vers un fichier.
 
+# les arguments
+
+- **sas_path** : le chemin vers le fichier du sas.
+- **images_src_dir** : le chemin vers le dossier source des images.
+- **images_dst_dir** : le chemin vers le dossier de destination des images.
+- **output_dir** : le chemin vers le dossier où seront générés les fichiers.
+- **log_dir** : le chemin vers le dossier de sauvegarde des sas traités.
+
 # ce qu'on veut faire
 
-on veut vérifier qu'il n'y a pas d'erreur dans les arguments et dans le sas. s'il y en a une, on veut l'afficher assez précisément.
+on veut vérifier qu'il n'y a pas d'erreur, ni dans les arguments, ni dans le sas. s'il y en a une, on veut l'afficher assez précisément.
 
-ensuite, on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés.
-
-chaque fichier produit doit correspondre à une section :
+on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers formatés. chaque fichier produit doit correspondre à une section :
 - `1 - 1.txt` pour les sections `c1`
 - `2 - 2.txt` pour les sections `c2`
 - `1 - 3.txt` pour les sections `c3`
@@ -79,30 +87,24 @@ chaque fichier produit doit correspondre à une section :
 - `3 - 3.txt` pour les sections `t3`
 - `mosalingua.txt` pour les sections `ms`
 
-enfin, on veut réinitialiser le sas et garder une copie des 10 derniers sas traités.
+on veut réinitialiser le sas et garder une copie des 10 derniers sas traités.
 
-les images mentionnées dans le sas doivent être déplacées dans un autre dossier.
-
-# les arguments
-
-- **sas_path** : le chemin vers le fichier du sas.
-- **images_src_dir** : le chemin vers le dossier source des images.
-- **images_dst_dir** : le chemin vers le dossier de destination des images.
-- **output_dir** : le chemin vers le dossier où seront produits les fichiers.
-- **log_dir** : le chemin vers le dossier de sauvegarde des sas traités.
+on veut déplacer les images correspondant aux image_paths dans `images_dst_dir` (si elles n'y sont pas déjà).
 
 # ce qu'il faut vérifier dans le sas
 
-le texte d'une balise *img* doit correspondre à un fichier existant dans images_src_dir ou images_dst_dir et, une fois trimé, il ne doit pas contenir autre chose que : espace, caractère alphanumérique, tiret, underscore, parenthèse, point.
+le texte d'une balise *img* doit correspondre à un fichier existant dans `images_src_dir` ou `images_dst_dir` et, une fois trimé, il ne doit pas contenir autre chose que : *espace*, *caractère alphanumérique*, *tiret*, *underscore*, *parenthèse*, *point*.
 
 aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
-il n'est pas nécessaire que tous les champs soient non vides ni même spécifiés par un changement de champ. cependant :
-- une section (quelconque non vide) doit avoir un premier champ non vide.
-- une section de type `c2` doit avoir au moins ses 2 premiers champs non vides.
-- une section de type `ms` doit avoir au moins ses champs `Anglais` et `Français` non vides.
+les sections vides sont ignorées.
 
-il ne doit pas y avoir plus de changements de champ que ce qui est possible dans une section.
+il n'est pas nécessaire que tous les champs d’une section soient remplis ni même spécifiés par un changement de champ. cependant :
+- une section doit avoir son premier champ rempli.
+- une section de type `c2` doit avoir au moins ses deux premiers champs remplis.
+- une section de type `ms` doit avoir au moins ses champs `Anglais` et `Français` remplis.
+
+il ne doit pas y avoir plus de changements de champ que ce qu’une section permet.
 
 il ne doit pas y avoir de balise *img* dans une section de type `ms`.
 
@@ -118,19 +120,17 @@ les lignes doivent être trimées de leurs espaces (et tabulations). par exemple
 
 les retours à la ligne doivent être encodés par `<br />`.
 
-un changement de champ est indiqué par `@`.
-
 le nombre de champs encodé doit toujours être respecté (même si le nombre de `@` ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
 si un champ (trimé) commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
-`<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf si utilisés dans les balises définies, où ils sont alors encodés tels quels).
+`<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf si utilisés dans une des balises du sas).
 
 un `//` encadrant un texte phonétique doit être encodé par `/`.
 
 ## pour toutes les sections sauf `ms`
 
-il doit y avoir une section encodée par ligne.
+il doit y avoir une section encodée par ligne. autrement dit, les changements de section doivent être encodés par `\n`.
 
 les changements de champ doivent être encodés par `\t`.
 
