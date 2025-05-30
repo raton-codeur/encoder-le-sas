@@ -28,7 +28,7 @@ il y a 6 combinaisons de [ paquet et type ] correspondant à 6 **sections** diff
 il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
-un changement de champ est indiqué par le caractère *@*.
+un changement de champ est indiqué par le caractère `@`.
 
 un **séparateur** peut être :
 - `\n-` pour le paquet 1
@@ -54,7 +54,7 @@ un **caractère blanc** est un espace, un retour à la ligne ou une tabulation.
 
 un champ ou un texte est **vide** s'il ne contient que des caractères blancs. à l'inverse, il est **rempli**. une section est vide si tous ses champs sont vides.
 
-les **balises** du sas :
+les **balises** du sas sont :
 
 - `<img src="" />`
 - `<span style="color:red;">` et `</span>`
@@ -62,7 +62,7 @@ les **balises** du sas :
 - `<sub>` et `</sub>`
 - `<b>` et `</b>`
 
-un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
+un **texte de balise** fait référence au contenu de l'attribut `src` de la balise `img` ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
 une **image_path** est une chaîne de caractères représentant un chemin vers un fichier.
 
