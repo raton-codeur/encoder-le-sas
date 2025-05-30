@@ -6,7 +6,7 @@ from send2trash import send2trash
 RED = "\033[31m"
 YELLOW = "\033[33m"
 RESET = "\033[0m"
-
+ 
 # initialiser les variables de configuration avec les arguments du script
 if len(sys.argv) != 6 :
     exit(f"{RED}erreur : nombre d'arguments incorrect{RESET}\nil faut :\n- sas_path\n- images_src_dir\n- images_dst_dir\n- output_dir\n- log_dir")
