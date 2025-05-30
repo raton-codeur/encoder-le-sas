@@ -68,16 +68,6 @@ for type, sections in sas.items() :
     
 
 
-# vérifier les deuxièmes champs des types c2
-for section in sas["c2"] :
-    if section[1] == '' :
-        exit(f"erreur : deuxième champ vide pour un type c2 :\n{section}")
-
-# vérifier le troisième champ des sections ms
-for section in sas["ms"] :
-    if not section[2] :
-        exit(f"erreur : champ vide pour le Français dans une carte ms :\n{section}")
-
 # vérifier qu'il n'y a pas de trous dans les deuxièmes champs
 for type in "t1", "t2", "t3" :
     for section in sas[type] :

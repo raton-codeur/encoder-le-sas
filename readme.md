@@ -95,16 +95,16 @@ on veut déplacer les images correspondant aux image_paths dans `images_dst_dir`
 
 le texte d'une balise *img* doit correspondre à un fichier existant dans `images_src_dir` ou `images_dst_dir` et, une fois trimé, il ne doit pas contenir autre chose que : *espace*, *caractère alphanumérique*, *tiret*, *underscore*, *parenthèse*, *point*.
 
-aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
+il ne doit pas y avoir plus de changements de champ que ce qu’une section permet.
 
 les sections vides sont ignorées.
 
-il n'est pas nécessaire que tous les champs d’une section soient remplis ni même spécifiés par un changement de champ. cependant :
-- une section doit avoir son premier champ rempli.
-- une section de type `c2` doit avoir au moins ses deux premiers champs remplis.
-- une section de type `ms` doit avoir au moins ses champs `Anglais` et `Français` remplis.
+il n'est pas nécessaire que tous les champs d’une section soient remplis, ni même spécifiés par un changement de champ. cependant :
+- toute section doit avoir son premier champ rempli ;
+- une section de type `c2` doit aussi avoir son deuxième champ rempli ;
+- une section de type `ms` doit aussi avoir son champ `Français` rempli.
 
-il ne doit pas y avoir plus de changements de champ que ce qu’une section permet.
+aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
 il ne doit pas y avoir de balise *img* dans une section de type `ms`.
 
