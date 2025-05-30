@@ -28,8 +28,6 @@ il y a 6 combinaisons de [ paquet et type ] correspondant à 6 **sections** diff
 il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
-un **changement de champ** au sein d'une section est indiqué par `@`.
-
 un **séparateur** peut être :
 - `\n-` pour le paquet 1
 - `\n--` pour le paquet 2
@@ -110,14 +108,6 @@ il ne doit pas y avoir de balise *img* dans une section de type `ms`.
 
 # règles d'encodage
 
-## échappement
-
-si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. si on veut encoder `\n\-`, on doit utiliser `\n\\-`. c'est la même logique pour les autres séparateurs.
-
-si on veut encoder `@` sans indiquer de changement de champ, on doit utiliser `\@`. si on veut encoder `\@`, on doit utiliser `\\@`.
-
-si on veut utiliser `//` sans insérer de prononciation, on doit utiliser `\//`. si on veut encoder `\//`, on doit utiliser `\\//`.
-
 ## pour toutes les sections
 
 les tabulations doivent être remplacées par 4 espaces.
@@ -127,6 +117,8 @@ les champs, les textes de balises, les textes phonétiques et les textes de trou
 les lignes doivent être trimées de leurs espaces (et tabulations). par exemple, `\n a` doit être vu comme `\na`.
 
 les retours à la ligne doivent être encodés par `<br />`.
+
+un changement de champ est indiqué par `@`.
 
 le nombre de champs encodé doit toujours être respecté (même si le nombre de `@` ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
 
@@ -152,3 +144,10 @@ les changements de champ doivent être encodés par `\n`.
 
 les champs vides doivent être encodés par `<p></p>`.
 
+## échappement
+
+si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. si on veut encoder `\n\-`, on doit utiliser `\n\\-`. c'est la même logique pour les autres séparateurs.
+
+si on veut encoder `@` sans indiquer de changement de champ, on doit utiliser `\@`. si on veut encoder `\@`, on doit utiliser `\\@`.
+
+si on veut utiliser `//` sans insérer de prononciation, on doit utiliser `\//`. si on veut encoder `\//`, on doit utiliser `\\//`.
