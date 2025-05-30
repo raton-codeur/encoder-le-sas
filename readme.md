@@ -28,7 +28,7 @@ il y a 6 combinaisons de [ paquet et type ] correspondant à 6 **sections** diff
 il y a aussi les sections `ms` pour les flashcards Mosalingua, avec les champs (basés sur Mosalingua Anglais) `Anglais`, `Extra Anglais`, `Français` et `Extra Français`.
 ça fait donc 7 sections différentes possibles.
 
-un changement de champ est indiqué par le caractère `@`.
+un changement de champ est indiqué par le caractère *@*.
 
 un **séparateur** peut être :
 - `\n-` pour le paquet 1
@@ -62,7 +62,7 @@ les **balises** du sas sont :
 - `<sub>` et `</sub>`
 - `<b>` et `</b>`
 
-un **texte de balise** fait référence au contenu de l'attribut `src` de la balise `img` ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
+un **texte de balise** fait référence au contenu de l'attribut *src* de la balise *img* ou au texte contenu entre les balises `<span style="color:red;">` et `</span>`, `<sup>` et `</sup>`, `<sub>` et `</sub>` ou `<b>` et `</b>`.
 
 une **image_path** est une chaîne de caractères représentant un chemin vers un fichier.
 
@@ -71,7 +71,7 @@ une **image_path** est une chaîne de caractères représentant un chemin vers u
 - **sas_path** : le chemin vers le fichier du sas.
 - **images_src_dir** : le chemin vers le dossier source des images.
 - **images_dst_dir** : le chemin vers le dossier de destination des images.
-- **output_dir** : le chemin vers le dossier où seront générés les fichiers.
+- **output_dir** : le chemin vers le dossier où seront générés les fichiers de sortie.
 - **log_dir** : le chemin vers le dossier de sauvegarde des sas traités.
 
 # ce qu'on veut faire
@@ -116,11 +116,11 @@ les tabulations doivent être remplacées par 4 espaces.
 
 les champs, les textes de balises, les textes phonétiques et les textes de trou doivent être trimés.
 
-les lignes doivent être trimées de leurs espaces (et tabulations). par exemple, `\n a` doit être vu comme `\na`.
+les lignes doivent être trimées de leurs espaces. par exemple, `\n a b \n` doit être vu comme `\na b\n`.
 
 les retours à la ligne doivent être encodés par `<br />`.
 
-le nombre de champs encodé doit toujours être respecté (même si le nombre de `@` ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodés.
+le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodé.
 
 si un champ (trimé) commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
