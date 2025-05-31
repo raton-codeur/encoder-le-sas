@@ -18,23 +18,8 @@
 
 
 
-# supprimer les échappements pour les changements de sections comme \n\- ou \n\-) par exemple
-for sections in sas.values() :
-    for i in range(len(sections)) :
-        sections[i] = re.sub(r"\n\\(---|--|-\)|-)(?!\\)", r"\n\1", sections[i])
-        sections[i] = re.sub(r"\n\\\\(---|--|-\)|-)", r"\n\\\1", sections[i])
 
-# supprimer les échappements pour @
-for sections in sas.values() :
-    for section in sections :
-        for i in range(len(section)) :
-            section[i] = section[i].replace("\\@", "@")
 
-# trimer les champs
-for sections in sas.values() :
-    for section in sections :
-        for i in range(len(section)) :
-            section[i] = section[i].strip()
 
 # supprimer les sections vides
 for type, sections in sas.items() :

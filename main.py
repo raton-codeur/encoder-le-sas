@@ -113,7 +113,7 @@ sas = sas2
 for section in sas["ms"] :
     if re.search(formats["img"], section) :
         pyperclip.copy(section)
-        exit(f"{RED}erreur : image trouvée{RESET}\nsection ms :\n{YELLOW}{section}{RESET}")
+        exit(f"{RED}erreur : image trouvée{RESET}\nsection ms copiée :\n{YELLOW}{section}{RESET}")
 
 # vérifier et déplacer les images
 for type, sections in sas.items() :
@@ -125,13 +125,13 @@ for type, sections in sas.items() :
             name_dst = os.path.join(images_dst_dir, name)
             if not name :
                 pyperclip.copy(section)
-                exit(f"{RED}erreur : image vide{RESET}\nsection {type} :\n{YELLOW}{section}{RESET}")
+                exit(f"{RED}erreur : image vide{RESET}\nsection {type} copiée :\n{YELLOW}{section}{RESET}")
             elif not re.fullmatch(r"^[\w \-\(\)\.]+$", name, flags=re.ASCII) :
                 pyperclip.copy(section)
-                exit(f"{RED}erreur : nom d'image invalide{RESET}\nnom : \"{name}\"\nautorisés :\n- lettre\n- chiffre\n- espace\n- underscore\n- tiret\n- parenthèse\n- point\nsection {type} :\n{YELLOW}{section}{RESET}")
+                exit(f"{RED}erreur : nom d'image invalide{RESET}\nnom : \"{name}\"\nautorisés :\n- lettre\n- chiffre\n- espace\n- underscore\n- tiret\n- parenthèse\n- point\nsection {type} copiée :\n{YELLOW}{section}{RESET}")
             elif not os.path.exists(name_src) and not os.path.exists(name_dst) :
                 pyperclip.copy(section)
-                exit(f"{RED}erreur : image introuvable{RESET} (ni dans images_src_dir ni dans images_dst_dir)\nnom : \"{name}\"\nsection {type} :\n{YELLOW}{section}{RESET}")
+                exit(f"{RED}erreur : image introuvable{RESET} (ni dans images_src_dir ni dans images_dst_dir)\nnom : \"{name}\"\nsection {type} copiée :\n{YELLOW}{section}{RESET}")
             elif os.path.exists(name_src) :
                 shutil.move(name_src, name_dst)
 
@@ -143,7 +143,7 @@ def get_split(sections, type, nb_fields) :
     for i in range(len(sections)) :
         if (len(re.findall(r"(?<!\\)@", sections[i])) > nb_fields - 1) :
             pyperclip.copy(sections[i])
-            exit(f"{RED}erreur : trop de changements de champs{RESET}\nsection {type} ({nb_fields} champs) :\n{YELLOW}{sections[i]}{RESET}")
+            exit(f"{RED}erreur : trop de changements de champs{RESET}\nsection {type} ({nb_fields} champs) copiée :\n{YELLOW}{sections[i]}{RESET}")
         new = [s.strip() for s in re.split(r"(?<!\\)@", sections[i])]
         if nb_fields == 4 and len(new) == 2 : # pour mosalingua, quand 2 champs seulement sont donnés
             new.insert(1, "")
@@ -170,26 +170,26 @@ for type, sections in sas.items() :
         if any(sas2[type][i]) :
             if not sas2[type][i][0] :
                pyperclip.copy(sas[type][i])
-               exit(f"{RED}erreur : premier champ vide{RESET}\nsection {type} :\n{YELLOW}{sas[type][i]}{RESET}")
+               exit(f"{RED}erreur : premier champ vide{RESET}\nsection {type} copiée :\n{YELLOW}{sas[type][i]}{RESET}")
 
 # vérifier les deuxièmes champs des types c2
 for i in range(len(sas["c2"])) :
     if sas2["c2"][i][0] and not sas2["c2"][i][1] :
         pyperclip.copy(sas["c2"][i])
-        exit(f"{RED}erreur : deuxième champ vide{RESET}\nsection c2 :\n{YELLOW}{sas["c2"][i]}{RESET}")
+        exit(f"{RED}erreur : deuxième champ vide{RESET}\nsection c2 copiée :\n{YELLOW}{sas["c2"][i]}{RESET}")
 
 # vérifier les troisièmes champs des types ms
 for i in range(len(sas["ms"])) :
     if sas2["ms"][i][0] and not sas2["ms"][i][2] :
         pyperclip.copy(sas["ms"][i])
-        exit(f"{RED}erreur : champ Français vide{RESET}\nsection ms :\n{YELLOW}{sas["ms"][i]}{RESET}")
+        exit(f"{RED}erreur : champ Français vide{RESET}\nsection ms copiée :\n{YELLOW}{sas["ms"][i]}{RESET}")
 
 # vérifier les deuxièmes champs des types t1, t2, t3
 for type in "t1", "t2", "t3" :
     for i in range(len(sas[type])) :
         if sas2[type][i][0] and re.search(formats["trou"], sas2[type][i][1]) :
             pyperclip.copy(sas[type][i])
-            exit(f"{RED}erreur : trou dans le deuxième champ{RESET}\nsection {type} :\n{YELLOW}{sas[type][i]}{RESET}")
+            exit(f"{RED}erreur : trou dans le deuxième champ{RESET}\nsection {type} copiée :\n{YELLOW}{sas[type][i]}{RESET}")
 
 # fin des vérifications
 
@@ -231,6 +231,9 @@ for sections in sas.values() :
             section[i] = section[i].replace("BROKET_LEFT", "<")
             section[i] = section[i].replace("BROKET_RIGHT", ">")
 
+            # supprimer les échappements pour les \@
+            section[i] = section[i].replace("\\@", "@")
+
             # supprimer les échappements pour \//
             section[i] = section[i].replace("\\//", "//")
 
@@ -238,8 +241,6 @@ for sections in sas.values() :
             section[i] = re.sub(r"\\(?=-)", "", section[i])
 
 
-        # sections[i] = re.sub(r"\n\\(---|--|-\)|-)(?!\\)", r"\n\1", sections[i])
-        # sections[i] = re.sub(r"\n\\\\(---|--|-\)|-)", r"\n\\\1", sections[i])
 
 
 

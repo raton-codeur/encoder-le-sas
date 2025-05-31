@@ -87,6 +87,8 @@ on veut **encoder** le sas, c'est-à-dire le diviser en plusieurs fichiers forma
 - `3 - 3.txt` pour les sections `t3`
 - `mosalingua.txt` pour les sections `ms`
 
+on dit que le texte d'un tel fichier est **encodé**.
+
 on veut réinitialiser le sas et garder une copie des 10 derniers sas traités.
 
 on veut déplacer les images correspondant aux image_paths dans `images_dst_dir` (si elles n'y sont pas déjà).
@@ -146,8 +148,8 @@ les champs vides doivent être encodés par `<p></p>`.
 
 ## échappement
 
-si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. en contrepartie, si on veut encoder `\-` quelque part dans le sas, on doit utiliser `\\-`.
+si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. en contrepartie, si on veut encoder `\-` quelque part, on doit utiliser `\\-`.
 
 si on veut encoder `@` sans indiquer de changement de champ, on doit utiliser `\@`. si on veut encoder `\@`, on doit utiliser `\\@`.
 
-si on veut utiliser `//` sans insérer de prononciation, on doit utiliser `\//`. si on veut encoder `\//`, on doit utiliser `\\//`.
+si on veut encoder `//` sans insérer de prononciation alors qu'il y a un autre `//` présent, on doit utiliser `\//` sur au moins un des `//`. si on veut encoder `\//`, on doit utiliser `\\//`.
