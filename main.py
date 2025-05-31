@@ -214,17 +214,34 @@ for sections in sas.values() :
                 section[i] = section[i].replace(f"//{a}//", f"/{a.strip()}/")
 
             # trimer les textes de balise et remplacer temporairement les chevrons de balise.
-            
+            for a in re.findall(formats["img"], section[i]) :
+                section[i] = section[i].replace(f"<img src=\"{a}\" />", f"BROKET_LEFTimg src=\"{a.strip()}\" /BROKET_RIGHT")
+            for a in re.findall(formats["span"], section[i]) :
+                section[i] = section[i].replace(f"<span style=\"color:red;\">{a}</span>", f"BROKET_LEFTspan style=\"color:red;\"BROKET_RIGHT{a.strip()}BROKET_LEFT/spanBROKET_RIGHT")
+            for a in re.findall(formats["sup"], section[i]) :
+                section[i] = section[i].replace(f"<sup>{a}</sup>", f"BROKET_LEFTsupBROKET_RIGHT{a.strip()}BROKET_LEFT/supBROKET_RIGHT")
+            for a in re.findall(formats["sub"], section[i]) :
+                section[i] = section[i].replace(f"<sub>{a}</sub>", f"BROKET_LEFTsubBROKET_RIGHT{a.strip()}BROKET_LEFT/subBROKET_RIGHT")
+            for a in re.findall(formats["b"], section[i]) :
+                section[i] = section[i].replace(f"<b>{a}</b>", f"BROKET_LEFTbBROKET_RIGHT{a.strip()}BROKET_LEFT/bBROKET_RIGHT")
+
+            # remplacer les chevrons et les chevrons temporaires
+            section[i] = section[i].replace("<", "&lt;")
+            section[i] = section[i].replace(">", "&gt;")
+            section[i] = section[i].replace("BROKET_LEFT", "<")
+            section[i] = section[i].replace("BROKET_RIGHT", ">")
+
+            # supprimer les échappements pour \//
+            section[i] = section[i].replace("\\//", "//")
+
+            # supprimer les échappements devant les tirets
+            section[i] = re.sub(r"\\(?=-)", "", section[i])
 
 
+        # sections[i] = re.sub(r"\n\\(---|--|-\)|-)(?!\\)", r"\n\1", sections[i])
+        # sections[i] = re.sub(r"\n\\\\(---|--|-\)|-)", r"\n\\\1", sections[i])
 
 
-# les chevrons de balises sont temporairement remplacés par "BROKET_LEFT" et "BROKET_RIGHT".
-
-
-# with open("sas2.txt", "w") as f :
-#     for sections in sas["c1"] :
-#         f.write(sections[0] + "@" + sections[1] + "\n")
 
 
 

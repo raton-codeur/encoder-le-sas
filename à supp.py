@@ -2,26 +2,6 @@
 
 
 
-# trimer les textes de balises, les textes de trou et les textes phonétiques.
-# les "//" de phonétique sont remplacés par "/".
-# les chevrons de balises sont temporairement remplacés par "BROKET_LEFT" et "BROKET_RIGHT".
-for i in re.findall(formats["img"], sas) :
-    sas = sas.replace(f"<img src=\"{i}\" />", f"BROKET_LEFTimg src=\"{i.strip()}\" /BROKET_RIGHT")
-for i in re.findall(formats["span"], sas) :
-    sas = sas.replace(f"<span style=\"color:red;\">{i}</span>", f"BROKET_LEFTspan style=\"color:red;\"BROKET_RIGHT{i.strip()}BROKET_LEFT/spanBROKET_RIGHT")
-for i in re.findall(formats["sup"], sas) :
-    sas = sas.replace(f"<sup>{i}</sup>", f"BROKET_LEFTsupBROKET_RIGHT{i.strip()}BROKET_LEFT/supBROKET_RIGHT")
-for i in re.findall(formats["sub"], sas) :
-    sas = sas.replace(f"<sub>{i}</sub>", f"BROKET_LEFTsubBROKET_RIGHT{i.strip()}BROKET_LEFT/subBROKET_RIGHT")
-for i in re.findall(formats["b"], sas) :
-    sas = sas.replace(f"<b>{i}</b>", f"BROKET_LEFTbBROKET_RIGHT{i.strip()}BROKET_LEFT/bBROKET_RIGHT")
-
-
-# remplacer les chevrons et les chevrons temporaires
-sas = sas.replace("<", "&lt;")
-sas = sas.replace(">", "&gt;")
-sas = sas.replace("BROKET_LEFT", "<")
-sas = sas.replace("BROKET_RIGHT", ">")
 
 
 
@@ -35,8 +15,8 @@ sas = sas.replace("BROKET_RIGHT", ">")
 
 
 
-# supprimer l'échappement des \//
-sas = sas.replace("\\//", "//")
+
+
 
 # supprimer les échappements pour les changements de sections comme \n\- ou \n\-) par exemple
 for sections in sas.values() :

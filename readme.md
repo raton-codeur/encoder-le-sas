@@ -146,7 +146,7 @@ les champs vides doivent être encodés par `<p></p>`.
 
 ## échappement
 
-si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. si on veut encoder `\n\-`, on doit utiliser `\n\\-`. c'est la même logique pour les autres séparateurs.
+si on veut encoder `\n-` sans indiquer de changement de section, on doit utiliser `\n\-`. en contrepartie, si on veut encoder `\-` quelque part dans le sas, on doit utiliser `\\-`.
 
 si on veut encoder `@` sans indiquer de changement de champ, on doit utiliser `\@`. si on veut encoder `\@`, on doit utiliser `\\@`.
 
