@@ -114,21 +114,21 @@ aucun trou ne doit être dans le deuxième champ d'une section de type `t`.
 
 ## pour toutes les sections
 
+le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodé.
+
 les tabulations doivent être remplacées par 4 espaces.
 
 les lignes doivent être trimées de leurs espaces. par exemple, `\n a b \n` doit être vu comme `\na b\n`.
 
 les champs, les textes de balises, les textes phonétiques et les textes de trou doivent être trimés.
 
-les retours à la ligne doivent être encodés par `<br />`.
-
-le nombre de champs encodé doit toujours être respecté (même si le nombre de *@* ne correspond pas). il doit donc toujours y avoir le bon nombre de changements de champ encodé.
-
-si un champ (trimé) commence par `"`, alors ce caractère doit être encodé par `&quot;`.
+si un champ commence par `"`, alors ce caractère doit être encodé par `&quot;`.
 
 `<` doit être encodé par `&lt;` et `>` doit être encodé par `&gt;` (sauf si utilisés dans une des balises du sas). `BROKET_LEFT` et `BROKET_RIGHT` ne doivent pas apparaître dans le sas car ils seront utilisés temporairement comme marqueurs lors du remplacement.
 
 un `//` encadrant un texte phonétique doit être encodé par `/`.
+
+les retours à la ligne doivent être encodés par `<br />`.
 
 ## pour toutes les sections sauf `ms`
 
