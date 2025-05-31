@@ -178,7 +178,14 @@ for i in range(len(sas["ms"])) :
         pyperclip.copy(sas["ms"][i])
         exit(f"{RED}erreur : champ Français vide{RESET}\nsection ms :\n{YELLOW}{sas["ms"][i]}{RESET}")
 
-# vérifier les deuxièmes champs des 
+# vérifier les deuxièmes champs des types t1, t2, t3
+for type in "t1", "t2", "t3" :
+    for i in range(len(sas[type])) :
+        if sas2[type][i][0] and re.search(formats["trou"], sas2[type][i][1]) :
+            pyperclip.copy(sas[type][i])
+            exit(f"{RED}erreur : trou dans le deuxième champ{RESET}\nsection {type} :\n{YELLOW}{sas[type][i]}{RESET}")
+
+
 print(sas)
 print(sas2)
 
