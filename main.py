@@ -46,7 +46,7 @@ if not os.path.isdir(log_dir) :
     print_args()
     exit()
 
-# init le sas 
+# init le sas
 with open(sas_path, "r") as f :
     sas = "\n" + f.read()
 
@@ -108,6 +108,12 @@ sas2["ms"] = sas["ms"]
 sas = sas2
 
 # sas est maintenant un dictionnaire avec [ clés : "c1", "c2", "c3", "t1", "t2", "t3", "ms" ] et [ valeur : la liste des sections correspondantes ]
+
+# vérifier les images des sections ms
+for section in sas["ms"] :
+    if re.search(formats["img"], section) :
+        pyperclip.copy(section)
+        exit(f"{RED}erreur : image trouvée{RESET}\nsection ms :\n{YELLOW}{section}{RESET}")
 
 # vérifier et déplacer les images
 for type, sections in sas.items() :
@@ -185,8 +191,57 @@ for type in "t1", "t2", "t3" :
             pyperclip.copy(sas[type][i])
             exit(f"{RED}erreur : trou dans le deuxième champ{RESET}\nsection {type} :\n{YELLOW}{sas[type][i]}{RESET}")
 
+# fin des vérifications
 
-print(sas)
-print(sas2)
+sas = sas2
+
+for sections in sas.values() :
+    for section in sections :
+        for i in range(len(section)) :
+
+            # remplacer les tabulations.
+            section[i] = section[i].replace("\t", "    ")
+
+            # trimer les lignes de leurs espaces.
+            section[i] = "\n".join([line.strip() for line in section[i].split("\n")])
+
+            # trimer les textes de trou
+            for a, b, c, d in re.findall(formats["trou complet"], section[i]) :
+                section[i] = section[i].replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
+
+            # trimer les textes phonétiques et remplacer les "//" par "/"
+            for a in re.findall(formats["phonetique"], section[i]) :
+                section[i] = section[i].replace(f"//{a}//", f"/{a.strip()}/")
+
+            # trimer les textes de balise et remplacer temporairement les chevrons de balise.
+            
+
+
+
+
+# les chevrons de balises sont temporairement remplacés par "BROKET_LEFT" et "BROKET_RIGHT".
+
+
+# with open("sas2.txt", "w") as f :
+#     for sections in sas["c1"] :
+#         f.write(sections[0] + "@" + sections[1] + "\n")
+
+
+
+
+
+
+
+
+
+
+
+
+# print
+for type in ["c1", "c2", "c3", "t1", "t2", "t3", "ms"] :
+    if sas[type] :
+        print(f"--- {type} ({len(sas[type])}) ---")
+        print(sas[type])
+
 
 

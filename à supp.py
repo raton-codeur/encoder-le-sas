@@ -1,12 +1,10 @@
 
-sas = sas.replace("\t", "    ")
 
-# trimer les lignes de leurs espaces
-sas = "\n".join([line.strip() for line in sas.split("\n")])
 
-# trimer les textes de balises, trous et phonétique.
-# les // de phonétique sont remplacés par /.
-# les chevrons de balises sont temporairement remplacés par une autre string.
+
+# trimer les textes de balises, les textes de trou et les textes phonétiques.
+# les "//" de phonétique sont remplacés par "/".
+# les chevrons de balises sont temporairement remplacés par "BROKET_LEFT" et "BROKET_RIGHT".
 for i in re.findall(formats["img"], sas) :
     sas = sas.replace(f"<img src=\"{i}\" />", f"BROKET_LEFTimg src=\"{i.strip()}\" /BROKET_RIGHT")
 for i in re.findall(formats["span"], sas) :
@@ -17,16 +15,25 @@ for i in re.findall(formats["sub"], sas) :
     sas = sas.replace(f"<sub>{i}</sub>", f"BROKET_LEFTsubBROKET_RIGHT{i.strip()}BROKET_LEFT/subBROKET_RIGHT")
 for i in re.findall(formats["b"], sas) :
     sas = sas.replace(f"<b>{i}</b>", f"BROKET_LEFTbBROKET_RIGHT{i.strip()}BROKET_LEFT/bBROKET_RIGHT")
-for a, b, c, d in re.findall(formats["trou complet"], sas) :
-    sas = sas.replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
-for i in re.findall(formats["phonetique"], sas) :
-    sas = sas.replace(f"//{i}//", f"/{i.strip()}/")
+
 
 # remplacer les chevrons et les chevrons temporaires
 sas = sas.replace("<", "&lt;")
 sas = sas.replace(">", "&gt;")
 sas = sas.replace("BROKET_LEFT", "<")
 sas = sas.replace("BROKET_RIGHT", ">")
+
+
+
+
+
+
+
+
+
+
+
+
 
 # supprimer l'échappement des \//
 sas = sas.replace("\\//", "//")
@@ -42,7 +49,6 @@ for sections in sas.values() :
     for section in sections :
         for i in range(len(section)) :
             section[i] = section[i].replace("\\@", "@")
-
 
 # trimer les champs
 for sections in sas.values() :
@@ -65,14 +71,9 @@ for type, sections in sas.items() :
 
 
 
-    
 
 
-# vérifier qu'il n'y a pas de trous dans les deuxièmes champs
-for type in "t1", "t2", "t3" :
-    for section in sas[type] :
-        if re.search(formats["trou"], section[1]) :
-            exit(f"erreur : trou dans le deuxième champ d'une section de type {type} :\n{section}")
+
 
 
 
@@ -130,7 +131,7 @@ def write_sections(section_name, nb_fields, end_field, end_section) :
             os.makedirs(output_dir)
         with open(os.path.join(output_dir, f"{file_names[section_name]}.txt"), "w") as f :
             if section_name == "ms" :
-                f.write("-\n")            
+                f.write("-\n")
             for section in sas[section_name] :
                 for i in range(nb_fields - 1) :
                     f.write(section[i] + end_field)
