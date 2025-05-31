@@ -153,7 +153,7 @@ def get_split(sections, type, nb_fields) :
         result.append(new)
     return result
 
-sas2 = {}
+sas2 = {"c1" : [], "c2" : [], "c3" : [], "t1" : [], "t2" : [], "t3" : [], "ms" : []}
 for type in "c1", "c3", "t1", "t2", "t3" : # les sections qui ont 2 champs
     sas2[type] = get_split(sas[type], type, 2)
 sas2["c2"] = get_split(sas["c2"], "c2", 3)
@@ -191,29 +191,37 @@ for type in "t1", "t2", "t3" :
             pyperclip.copy(sas[type][i])
             exit(f"{RED}erreur : trou dans le deuxième champ{RESET}\nsection {type} copiée :\n{YELLOW}{sas[type][i]}{RESET}")
 
-# fin des vérifications
+# retirer les sections vides
+sas = {}
+for type, sections in sas2.items() :
+    sections = [section for section in sections if any(section)]
+    if sections :
+        sas[type] = sections
 
-sas = sas2
+if not any(sas.values()) :
+    exit(f"{RED}erreur : sas vide{RESET}")
+
+# fin des vérifications
 
 for sections in sas.values() :
     for section in sections :
         for i in range(len(section)) :
 
-            # remplacer les tabulations.
+            # encoder les tabulations
             section[i] = section[i].replace("\t", "    ")
 
-            # trimer les lignes de leurs espaces.
+            # trimer les lignes de leurs espaces
             section[i] = "\n".join([line.strip() for line in section[i].split("\n")])
 
             # trimer les textes de trou
             for a, b, c, d in re.findall(formats["trou complet"], section[i]) :
                 section[i] = section[i].replace("{{" + f"c{a}::{b}{c}" + "}}", "{{" + f"c{a}::{b.strip()}{'::' if d.strip() else ''}{d.strip()}" + "}}")
 
-            # trimer les textes phonétiques et remplacer les "//" par "/"
+            # trimer les textes phonétiques et encoder les "//"
             for a in re.findall(formats["phonetique"], section[i]) :
                 section[i] = section[i].replace(f"//{a}//", f"/{a.strip()}/")
 
-            # trimer les textes de balise et remplacer temporairement les chevrons de balise.
+            # trimer les textes de balise et remplacer temporairement les chevrons de balise
             for a in re.findall(formats["img"], section[i]) :
                 section[i] = section[i].replace(f"<img src=\"{a}\" />", f"BROKET_LEFTimg src=\"{a.strip()}\" /BROKET_RIGHT")
             for a in re.findall(formats["span"], section[i]) :
@@ -225,41 +233,81 @@ for sections in sas.values() :
             for a in re.findall(formats["b"], section[i]) :
                 section[i] = section[i].replace(f"<b>{a}</b>", f"BROKET_LEFTbBROKET_RIGHT{a.strip()}BROKET_LEFT/bBROKET_RIGHT")
 
-            # remplacer les chevrons et les chevrons temporaires
+            # encoder les chevrons et rétablir les chevrons de balise
             section[i] = section[i].replace("<", "&lt;")
             section[i] = section[i].replace(">", "&gt;")
             section[i] = section[i].replace("BROKET_LEFT", "<")
             section[i] = section[i].replace("BROKET_RIGHT", ">")
 
-            # supprimer les échappements pour les \@
+            # encoder les premiers guillemets
+            if section[i].startswith('"') :
+                section[i] = "&quot;" + section[i][1:]
+
+            # supprimer les échappements devant "@", "//" et "-"
             section[i] = section[i].replace("\\@", "@")
-
-            # supprimer les échappements pour \//
             section[i] = section[i].replace("\\//", "//")
+            section[i] = section[i].replace("\\-", "-")
 
-            # supprimer les échappements devant les tirets
-            section[i] = re.sub(r"\\(?=-)", "", section[i])
+            # encoder les retours à la ligne
+            section[i] = section[i].replace("\n", "<br />")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# encoder les champs vides des sections ms
+for section in sas.get("ms", []) :
+    for i in range(len(section)) :
+        if section[i] == '' :
+            section[i] = "<p></p>"
 
 # print
-for type in ["c1", "c2", "c3", "t1", "t2", "t3", "ms"] :
-    if sas[type] :
-        print(f"--- {type} ({len(sas[type])}) ---")
-        print(sas[type])
+for type, sections in sas.items() :
+    print(f"--- {type} ({len(sas[type])}) ---")
+    print(sas[type])
 
+# supprimer les précédents fichiers de sortie
+for file_name in os.listdir(output_dir) :
+    file_path = os.path.join(output_dir, file_name)
+    send2trash(file_path)
 
+# type de section -> nom de fichier
+file_names = {
+    "c1" : "1 - 1",
+    "c2" : "2 - 2",
+    "c3" : "1 - 3",
+    "t1" : "3 - 1",
+    "t2" : "4 - 2",
+    "t3" : "3 - 3",
+    "ms" : "mosalingua"
+}
 
+def create_output_file(type, nb_fields, end_field, end_section) :
+    if type in sas :
+        with open(os.path.join(output_dir, f"{file_names[type]}.txt"), "w") as f :
+            if type == "ms" :
+                f.write("-\n")
+            for section in sas[type] :
+                for i in range(nb_fields - 1) :
+                    f.write(section[i] + end_field)
+                f.write(section[nb_fields - 1] + end_section)
+
+# création des fichiers de sortie
+create_output_file("c1", 2, "\t", "\n")
+create_output_file("c2", 3, "\t", "\n")
+create_output_file("c3", 2, "\t", "\n")
+create_output_file("t1", 2, "\t", "\n")
+create_output_file("t2", 2, "\t", "\n")
+create_output_file("t3", 2, "\t", "\n")
+create_output_file("ms", 4, "\n", "\n-\n")
+
+# mise à jour des logs
+log_9_path = os.path.join(log_dir, "9.txt")
+if os.path.exists(log_9_path) :
+    send2trash(log_9_path)
+for i in range(8, -1, -1) :
+    a = os.path.join(log_dir, f"{i}.txt")
+    b = os.path.join(log_dir, f"{i + 1}.txt")
+    if os.path.exists(a) :
+        os.rename(a, b)
+shutil.copy(sas_path, os.path.join(log_dir, "0.txt"))
+
+# mise à jour du sas
+with open(sas_path, "w") as f :
+    f.write("-" + "\n" * 40)
