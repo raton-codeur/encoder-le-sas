@@ -257,10 +257,18 @@ for section in sas.get("ms", []) :
         if section[i] == '' :
             section[i] = "<p></p>"
 
+# type de paquet -> nombre de sections
+lens = {
+    "1" : len(sas.get("c1", [])) + len(sas.get("t1", [])),
+    "2" : len(sas.get("c2", [])) + len(sas.get("t2", [])),
+    "3" : len(sas.get("c3", [])) + len(sas.get("t3", [])),
+    "ms" : len(sas.get("ms", []))
+}
+
 # print
-for type, sections in sas.items() :
-    print(f"--- {type} ({len(sas[type])}) ---")
-    print(sas[type])
+for type, l in lens.items() :
+    if lens[type] :
+        print(f"● {type} : {l}")
 
 # supprimer les précédents fichiers de sortie
 for file_name in os.listdir(output_dir) :
@@ -310,4 +318,4 @@ shutil.copy(sas_path, os.path.join(log_dir, "0.txt"))
 
 # mise à jour du sas
 with open(sas_path, "w") as f :
-    f.write("-" + "\n" * 40)
+    f.write("-" + "\n" * 20)
